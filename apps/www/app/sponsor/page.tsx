@@ -3,7 +3,10 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { FEEDBACK_EMAIL } from '@/lib/links';
 import {
+  COMPANY_SPONSORS,
+  CUSTOM_AMOUNT_MAX,
   CUSTOM_AMOUNT_URL,
+  LARGE_GIFT_LEVELS,
   MANAGE_SUBSCRIPTION_URL,
   SPONSOR_ENABLED,
   SPONSOR_PUBLIC,
@@ -24,8 +27,20 @@ export const metadata: Metadata = SPONSOR_ENABLED
 const LARGE_SPONSOR_MAILTO = `mailto:${FEEDBACK_EMAIL}?subject=${encodeURIComponent(
   'Sponsoring SDODS',
 )}&body=${encodeURIComponent(
-  'Company or name:\nAmount and cadence (one-time, monthly, yearly):\nInvoice or bank transfer:\nLogo placement wanted (yes/no):\n',
+  [
+    'Name or legal entity to invoice:',
+    'Billing address:',
+    'Tax or VAT ID (if your finance team needs it on the invoice):',
+    'Purchase order number (if any):',
+    'Amount and cadence (one-time, yearly, monthly):',
+    'Pay by (bank transfer / ACH / card on the invoice):',
+    'Thank publicly? (no / name only / name and logo):',
+    'Forms your finance team needs from us:',
+    '',
+  ].join('\n'),
 )}`;
+
+const usd = (n: number) => `$${n.toLocaleString('en-US')}`;
 
 function TierCard({ tier }: { tier: SponsorTier }) {
   return (
@@ -63,9 +78,12 @@ export default function SponsorPage() {
             <article className="card flex flex-col p-6">
               <h2 className="text-xl font-bold">Give any amount</h2>
               <p className="muted mt-2 flex-1 text-sm">
-                Pick your own number, from a dollar to a serious contribution. There is no upper
-                limit you are likely to hit, and Stripe Checkout offers the payment methods
-                available where you are.
+                Pick your own number, from $1 up to {usd(CUSTOM_AMOUNT_MAX)} in one payment. Stripe
+                Checkout offers the payment methods available where you are. Giving more than that?{' '}
+                <a href="#company" className="underline">
+                  We will send an invoice
+                </a>
+                .
               </p>
               <a href={CUSTOM_AMOUNT_URL} className="btn btn-primary mt-4" rel="noreferrer">
                 Choose an amount
@@ -111,18 +129,67 @@ export default function SponsorPage() {
       <h2 id="company" className="mt-12 scroll-mt-20 text-xl font-bold">
         {SPONSOR_PUBLIC ? 'Company or large sponsorship' : 'Sponsor the project'}
       </h2>
-      <article className="card mt-4 flex flex-col gap-4 p-6 sm:flex-row sm:items-center">
-        <p className="muted flex-1 text-sm">
-          Sponsoring as a company, or giving an amount you would rather not put on a card? Email us.
-          We can arrange a bank transfer or an invoice, a yearly sponsorship and, if you want it,
-          your logo on this page and in the README.
+      <p className="muted mt-1 max-w-2xl text-sm">
+        For a company, or for any gift over {usd(CUSTOM_AMOUNT_MAX)} or one you would rather not put
+        on a card, we invoice you. A bank transfer costs both sides far less in fees than a card
+        does on a large amount.
+      </p>
+      <div className="mt-4 grid gap-4 sm:grid-cols-3">
+        {LARGE_GIFT_LEVELS.map((l) => (
+          <article key={l.id} className="card flex flex-col p-5">
+            <h3 className="font-semibold">{l.label}</h3>
+            <p className="mt-2 text-2xl font-extrabold tracking-tight">
+              {usd(l.amount)}+<span className="muted text-sm font-normal"> / year</span>
+            </p>
+            <ul className="muted mt-2 list-disc space-y-1 pl-5 text-sm">
+              {l.perks.map((p) => (
+                <li key={p}>{p}</li>
+              ))}
+            </ul>
+          </article>
+        ))}
+      </div>
+      <article className="card mt-4 p-6">
+        <h3 className="font-semibold">How it works</h3>
+        <ol className="muted mt-2 list-decimal space-y-1 pl-5 text-sm">
+          <li>Email us the amount, who to invoice and how you want to be thanked.</li>
+          <li>
+            We send a Stripe invoice from SDODS Developers, with your purchase order number on it if
+            you have one. You pay by bank transfer, ACH or card, on 30-day terms.
+          </li>
+          <li>Stripe emails you a receipt as soon as the payment arrives.</li>
+          <li>If you asked to be thanked publicly, your name or logo goes up after that.</li>
+        </ol>
+        <p className="muted mt-3 text-sm">
+          Need a vendor form, tax form or a short sponsorship letter for your finance team? Ask in
+          the same email. You can also give monthly or yearly, and the amount is up to you; the
+          levels above only decide the thank-you.
         </p>
-        <div>
-          <a href={LARGE_SPONSOR_MAILTO} className="btn btn-secondary text-sm">
-            Email {FEEDBACK_EMAIL}
-          </a>
-        </div>
+        <a href={LARGE_SPONSOR_MAILTO} className="btn btn-primary mt-4 text-sm">
+          Email {FEEDBACK_EMAIL}
+        </a>
       </article>
+
+      {COMPANY_SPONSORS.length > 0 && (
+        <>
+          <h2 id="sponsors" className="mt-12 scroll-mt-20 text-xl font-bold">
+            Thank you to our sponsors
+          </h2>
+          <ul className="mt-4 flex flex-wrap gap-3">
+            {COMPANY_SPONSORS.map((c) => (
+              <li key={c.name}>
+                <a
+                  href={c.url}
+                  className="card block px-4 py-2 text-sm font-semibold"
+                  rel="sponsored noopener"
+                >
+                  {c.name}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
 
       <h2 className="mt-12 text-xl font-bold">Other ways to help</h2>
       <ul className="muted mt-3 list-disc space-y-2 pl-5 text-sm">
@@ -143,17 +210,49 @@ export default function SponsorPage() {
         <li>Tell a colleague who still writes tests by hand.</li>
       </ul>
 
-      {SPONSOR_PUBLIC && (
-        <p className="muted mt-12 border-t border-[var(--line)] pt-6 text-xs leading-6">
-          Payments are processed by Stripe for SDODS Developers. SDODS never sees your card or bank
-          details. Sponsorships are gifts to an open-source project, not purchases and not
-          tax-deductible donations. Monthly sponsor?{' '}
-          <a href={MANAGE_SUBSCRIPTION_URL} className="underline" rel="noreferrer">
-            Change your card or cancel
-          </a>
-          .
-        </p>
-      )}
+      <section
+        id="terms"
+        aria-labelledby="terms-heading"
+        className="muted mt-12 scroll-mt-20 border-t border-[var(--line)] pt-6 text-xs leading-6"
+      >
+        <h2 id="terms-heading" className="text-sm font-semibold text-[var(--fg)]">
+          Sponsorship terms
+        </h2>
+        <ul className="mt-2 list-disc space-y-1 pl-5">
+          <li>
+            Payments are processed by Stripe for SDODS Developers. SDODS never sees your card or
+            bank details.
+          </li>
+          <li>
+            A sponsorship is a gift to an open-source project. It buys no goods, services, support
+            or say over the roadmap. SDODS Developers is not a registered charity, so it is not a
+            tax-deductible donation.
+          </li>
+          <li>Made a mistake? Email {FEEDBACK_EMAIL} within 30 days and we refund it in full.</li>
+          <li>
+            We thank sponsors publicly only when they ask us to, and we may decline a public listing
+            that does not fit the project. Leave the &ldquo;name to thank publicly&rdquo; field at
+            checkout empty to stay anonymous. See the{' '}
+            <Link href="/privacy/" className="underline">
+              privacy policy
+            </Link>
+            .
+          </li>
+          <li>
+            Stripe may ask a sponsor to verify a large payment before it goes through. That is
+            Stripe&rsquo;s fraud protection, not a problem with your gift.
+          </li>
+          {SPONSOR_PUBLIC && (
+            <li>
+              Monthly sponsor?{' '}
+              <a href={MANAGE_SUBSCRIPTION_URL} className="underline" rel="noreferrer">
+                Change your card or cancel
+              </a>
+              .
+            </li>
+          )}
+        </ul>
+      </section>
     </div>
   );
 }

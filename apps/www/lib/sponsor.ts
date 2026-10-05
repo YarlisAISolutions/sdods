@@ -86,9 +86,62 @@ export const SPONSOR_TIERS: SponsorTier[] = [
 /** One-time payment where the sponsor types the amount, up to Stripe's per-payment maximum. */
 export const CUSTOM_AMOUNT_URL = 'https://buy.stripe.com/28E28q4cjcWd1lmaaz7g406';
 
+/**
+ * The most the any-amount link accepts in one payment, in whole US dollars. Stripe sets the ceiling;
+ * stripe-sponsor-setup.py records what it accepted as `custom_max_cents` in stripe-sponsor.json.
+ * Anything above it goes through an invoice (see LARGE_GIFT_LEVELS and docs/sponsor-large-gifts.md).
+ */
+export const CUSTOM_AMOUNT_MAX = 10_000;
+
+export interface SponsorLevel {
+  id: string;
+  label: string;
+  /** Whole US dollars per year, the minimum for the level. */
+  amount: number;
+  perks: string[];
+}
+
+/**
+ * Company and large sponsorship, arranged by email and paid by invoice. The perks are recognition
+ * only, never services: a sponsorship stays a gift, so there is no support contract, SLA or
+ * roadmap control to sell.
+ */
+export const LARGE_GIFT_LEVELS: SponsorLevel[] = [
+  {
+    id: 'bronze',
+    label: 'Bronze',
+    amount: 1_000,
+    perks: ['Your name and link on this page', 'A thank-you in the release notes'],
+  },
+  {
+    id: 'silver',
+    label: 'Silver',
+    amount: 5_000,
+    perks: ['Your logo on this page', 'Your logo in the README', 'Everything in Bronze'],
+  },
+  {
+    id: 'gold',
+    label: 'Gold',
+    amount: 10_000,
+    perks: [
+      'Your logo on the sdods.com home page',
+      'A larger logo in the README',
+      'Everything in Silver',
+    ],
+  },
+];
+
+export interface CompanySponsor {
+  name: string;
+  url: string;
+  level: SponsorLevel['id'];
+}
+
+/** Sponsors who asked to be thanked publicly. Add one only after their payment has cleared. */
+export const COMPANY_SPONSORS: CompanySponsor[] = [];
+
 /** Stripe customer-portal login, where monthly sponsors change their card or cancel. */
-export const MANAGE_SUBSCRIPTION_URL =
-  'https://billing.stripe.com/p/login/6oU7sK1073lD1lm96v7g400';
+export const MANAGE_SUBSCRIPTION_URL = 'https://billing.stripe.com/p/login/6oU7sK1073lD1lm96v7g400';
 
 /** Every Stripe link the page needs. */
 export const SPONSOR_LINKS: string[] = [
