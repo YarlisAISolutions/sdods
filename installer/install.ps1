@@ -50,7 +50,7 @@ $RepoUrl = if ($env:SDODS_REPO_URL) { $env:SDODS_REPO_URL } else { "https://gith
 $ApiUrl = "https://api.github.com/repos/$RepoSlug"
 $DocsUrl = 'https://docs.sdods.com'
 # Mirrors SPONSOR_ENABLED in packages/contracts/src/sponsor.ts (tests/sponsor.test.ts checks it).
-$SponsorEnabled = $false
+$SponsorEnabled = $true
 $NodeMinMajor = 22
 $BunVersionPin = '1.4.2'
 $InstallerVersion = '1.0.0'

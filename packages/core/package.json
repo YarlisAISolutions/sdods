@@ -3,6 +3,7 @@
   "version": "0.12.1",
   "description": "SDODS runtime: configuration, project registry, fixtures, step libraries, data providers, screenshot narratives and self-healing locators.",
   "license": "Apache-2.0",
+  "funding": "https://sdods.com/sponsor/",
   "author": "SDODS <admin@sdods.com>",
   "type": "module",
   "exports": {

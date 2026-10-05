@@ -39,7 +39,7 @@ export const SPONSOR_TIERS: SponsorTier[] = [
     label: 'A coffee',
     amount: 5,
     blurb: 'A small thank-you that keeps a maintainer going through one more flaky-test hunt.',
-    url: '',
+    url: 'https://buy.stripe.com/6oU7sK1073lD1lm96v7g400',
   },
   {
     id: 'supporter',
@@ -47,7 +47,7 @@ export const SPONSOR_TIERS: SponsorTier[] = [
     label: 'Supporter',
     amount: 25,
     blurb: 'Helps pay for the CI that runs every change across browsers and operating systems.',
-    url: '',
+    url: 'https://buy.stripe.com/9B69AScIP3lDggg3Mb7g401',
   },
   {
     id: 'champion',
@@ -55,7 +55,7 @@ export const SPONSOR_TIERS: SponsorTier[] = [
     label: 'Champion',
     amount: 100,
     blurb: 'Helps keep sdods.com, the docs and the package channels online.',
-    url: '',
+    url: 'https://buy.stripe.com/bJecN47ov9K1fccbeD7g402',
   },
   {
     id: 'monthly-coffee',
@@ -63,7 +63,7 @@ export const SPONSOR_TIERS: SponsorTier[] = [
     label: 'Coffee club',
     amount: 5,
     blurb: 'A coffee every month. Small, steady and the kind of support that adds up.',
-    url: '',
+    url: 'https://buy.stripe.com/3cI9AS8sz6xPd44eqP7g403',
   },
   {
     id: 'monthly-supporter',
@@ -71,7 +71,7 @@ export const SPONSOR_TIERS: SponsorTier[] = [
     label: 'Backer',
     amount: 25,
     blurb: 'Steady help with CI, releases and code-signing certificates.',
-    url: '',
+    url: 'https://buy.stripe.com/fZu8wO38fe0haVWgyX7g404',
   },
   {
     id: 'monthly-champion',
@@ -79,15 +79,16 @@ export const SPONSOR_TIERS: SponsorTier[] = [
     label: 'Patron',
     amount: 100,
     blurb: 'Funds maintainer time for features, fixes and answering questions.',
-    url: '',
+    url: 'https://buy.stripe.com/eVq00iaAH09raVW5Uj7g405',
   },
 ];
 
 /** One-time payment where the sponsor types the amount, up to Stripe's per-payment maximum. */
-export const CUSTOM_AMOUNT_URL = '';
+export const CUSTOM_AMOUNT_URL = 'https://buy.stripe.com/28E28q4cjcWd1lmaaz7g406';
 
 /** Stripe customer-portal login, where monthly sponsors change their card or cancel. */
-export const MANAGE_SUBSCRIPTION_URL = '';
+export const MANAGE_SUBSCRIPTION_URL =
+  'https://billing.stripe.com/p/login/6oU7sK1073lD1lm96v7g400';
 
 /** Every Stripe link the page needs. */
 export const SPONSOR_LINKS: string[] = [
