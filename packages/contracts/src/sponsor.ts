@@ -8,7 +8,7 @@
  * and keep their own copy; tests/sponsor.test.ts fails if any copy disagrees.
  */
 // Typed as boolean so code written for either value type-checks, not only for the current one.
-export const SPONSOR_ENABLED: boolean = false;
+export const SPONSOR_ENABLED: boolean = true;
 
 /** Every surface links here; only the sponsor page itself holds Stripe URLs. */
 export const SPONSOR_URL = 'https://sdods.com/sponsor/';

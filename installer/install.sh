@@ -25,7 +25,7 @@ SDODS_API_URL="${SDODS_API_URL:-https://api.github.com/repos/${SDODS_REPO_SLUG}}
 SITE_URL='https://sdods.com'
 DOCS_URL='https://docs.sdods.com'
 # Mirrors SPONSOR_ENABLED in packages/contracts/src/sponsor.ts (tests/sponsor.test.ts checks it).
-SPONSOR_ENABLED=0
+SPONSOR_ENABLED=1
 NODE_MIN_MAJOR=22
 BUN_VERSION_PIN='1.4.2'
 INSTALLER_VERSION='1.0.0'

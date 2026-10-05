@@ -10,7 +10,7 @@ import type { UpdateController } from './updater.js';
 
 // A copy of SPONSOR_ENABLED in @sdods/contracts/sponsor, which the desktop app does not bundle;
 // tests/sponsor.test.ts keeps the two in step.
-const SPONSOR_ENABLED = false;
+const SPONSOR_ENABLED = true;
 
 export interface MenuContext {
   workspace: string;

@@ -3,6 +3,7 @@
   "version": "0.12.1",
   "description": "SDODS integrations: GitHub checks and issues, Jira issues and links.",
   "license": "Apache-2.0",
+  "funding": "https://sdods.com/sponsor/",
   "author": "SDODS <admin@sdods.com>",
   "type": "module",
   "exports": {

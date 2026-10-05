@@ -3,6 +3,7 @@
   "version": "0.12.1",
   "description": "SDODS AI agents: planner, generator, healer, upgrader and reviewer over a provider-agnostic adapter.",
   "license": "Apache-2.0",
+  "funding": "https://sdods.com/sponsor/",
   "author": "SDODS <admin@sdods.com>",
   "type": "module",
   "exports": {
