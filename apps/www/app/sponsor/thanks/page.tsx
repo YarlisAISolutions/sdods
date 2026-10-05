@@ -24,7 +24,8 @@ export default function SponsorThanksPage() {
         free, open and moving.
       </p>
       <p className="muted mt-2 text-sm">
-        Anything wrong with the payment? Email {FEEDBACK_EMAIL} and we will sort it out.
+        Need an invoice in your company&rsquo;s name, or anything wrong with the payment? Email{' '}
+        {FEEDBACK_EMAIL} and we will sort it out.
       </p>
       <div className="mt-8 flex flex-wrap justify-center gap-3">
         <a href={DOCS_URL} className="btn btn-primary text-sm">

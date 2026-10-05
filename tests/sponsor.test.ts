@@ -2,7 +2,10 @@ import { describe, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import {
+  COMPANY_SPONSORS,
+  CUSTOM_AMOUNT_MAX,
   CUSTOM_AMOUNT_URL,
+  LARGE_GIFT_LEVELS,
   MANAGE_SUBSCRIPTION_URL,
   SPONSOR_ENABLED,
   SPONSOR_LINKS,
@@ -16,6 +19,23 @@ const repoRoot = join(import.meta.dirname, '..');
 const read = (path: string) => readFileSync(join(repoRoot, path), 'utf8');
 
 describe('sponsorship', () => {
+  it('large gifts pick up where the any-amount link stops', () => {
+    // Above CUSTOM_AMOUNT_MAX the page sends sponsors to an invoice, so the top level must not
+    // start below the card cap, and the page must state the cap rather than promise no limit.
+    expect(CUSTOM_AMOUNT_MAX).toBeGreaterThan(0);
+    const amounts = LARGE_GIFT_LEVELS.map((l) => l.amount);
+    expect(amounts).toEqual([...amounts].sort((a, b) => a - b));
+    expect(Math.max(...amounts)).toBeGreaterThanOrEqual(CUSTOM_AMOUNT_MAX);
+    const page = read('apps/www/app/sponsor/page.tsx');
+    expect(page).toContain('CUSTOM_AMOUNT_MAX');
+    expect(page).not.toMatch(/no upper\s+limit/);
+    const levels = new Set(LARGE_GIFT_LEVELS.map((l) => l.id));
+    for (const c of COMPANY_SPONSORS) {
+      expect(levels.has(c.level), c.name).toBe(true);
+      expect(c.url, c.name).toMatch(/^https:\/\//);
+    }
+  });
+
   it('the Stripe links are all set or all empty, never half of each', () => {
     // SPONSOR_PUBLIC turns the whole ask on. With some links filled and others empty the page
     // would show buttons that go nowhere, so a partial set is always a mistake.
