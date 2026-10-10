@@ -52,7 +52,7 @@ $DocsUrl = 'https://docs.sdods.com'
 # Mirrors SPONSOR_ENABLED in packages/contracts/src/sponsor.ts (tests/sponsor.test.ts checks it).
 $SponsorEnabled = $true
 $NodeMinMajor = 22
-$BunVersionPin = '1.4.2'
+$BunVersionPin = '1.4.3'
 $InstallerVersion = '1.0.0'
 
 # ── options: parameter wins, then environment, then default ──────────────────────────────────
