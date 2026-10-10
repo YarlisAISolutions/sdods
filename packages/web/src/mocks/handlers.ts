@@ -341,7 +341,7 @@ export const handlers = [
       },
       {
         event: 'log',
-        data: { t: Date.now(), stream: 'out', line: 'Running 10 tests using 2 workers' },
+        data: { t: Date.now(), stream: 'out', line: 'Running 10 scenarios with 2 workers' },
       },
       { event: 'progress', data: { done: 1, total: 10 } },
       {
