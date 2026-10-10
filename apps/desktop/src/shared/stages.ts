@@ -56,7 +56,7 @@ export const STAGES: Stage[] = [
     id: 'dependencies',
     title: 'Installing the test runner',
     weight: 24,
-    steps: [{ id: 'deps', label: 'Playwright, playwright-bdd and TypeScript' }],
+    steps: [{ id: 'deps', label: 'The SDODS runner and its browser engine (Playwright)' }],
   },
   {
     id: 'launch',

@@ -6,6 +6,7 @@ import pc from 'picocolors';
 import { SdodsError, DEFAULT_ARTIFACTS_DIR } from '@sdods/core';
 import { createContext } from '../context.js';
 import { json, out, table } from '../ui.js';
+import { toolCommand } from '../workspace-bin.js';
 
 /** Recursively find `trace.zip` files (runner output) below a directory. */
 export function findTraceZips(dir: string, depth = 8): string[] {
@@ -100,7 +101,8 @@ export function register(program: Command) {
         return;
       }
       out(pc.cyan(`Opening ${zips.length} trace(s) from ${source}`));
-      const res = await execa('npx', ['playwright', 'show-trace', ...zips], {
+      const [file, ...argv] = toolCommand(ctx.rootDir, ['playwright', 'show-trace', ...zips]);
+      const res = await execa(file, argv, {
         cwd: ctx.rootDir,
         stdio: 'inherit',
         reject: false,

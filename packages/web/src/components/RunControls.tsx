@@ -108,7 +108,7 @@ export function RunControls({
         open={confirming}
         onOpenChange={setConfirming}
         title="Stop this run?"
-        description="Playwright, its workers and their browsers are stopped. Results so far are kept."
+        description="The run, its workers and their browsers are stopped. Results so far are kept."
         confirmLabel="Stop run"
         pending={cancel.isPending}
         error={cancel.error}

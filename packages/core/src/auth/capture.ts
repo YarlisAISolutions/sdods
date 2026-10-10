@@ -9,6 +9,7 @@ import { Logger } from '../logger.js';
 import { CompositeDataProvider } from '../data/provider.js';
 import { AuthStateCache, type CachedState } from '../fixtures/auth.js';
 import { defineAuth, type AuthStrategy, type PoolUserLike } from './index.js';
+import { toolCommand } from '../workspace-bin.js';
 
 const log = new Logger('auth');
 
@@ -139,7 +140,8 @@ async function defaultLaunch(name: CaptureBrowser, headed: boolean): Promise<Bro
 }
 
 async function defaultInteractive(args: string[]): Promise<number> {
-  const res = await execa('npx', args, { stdio: 'inherit', reject: false });
+  const [file, ...argv] = toolCommand(process.cwd(), args);
+  const res = await execa(file, argv, { stdio: 'inherit', reject: false });
   return res.exitCode ?? 1;
 }
 
@@ -204,7 +206,7 @@ export async function captureAuth(opts: CaptureOptions): Promise<CaptureResult[]
         );
         const code = await (opts.runInteractive ?? defaultInteractive)(args);
         if (code !== 0 && !existsSync(file)) {
-          result.skipped = `codegen exited with ${code} and wrote no storage state`;
+          result.skipped = `the login window closed with code ${code} before a session was saved`;
         } else if (existsSync(file)) {
           cache.save(user, JSON.parse(readFileSync(file, 'utf8')) as Record<string, unknown>);
           result.file = file;

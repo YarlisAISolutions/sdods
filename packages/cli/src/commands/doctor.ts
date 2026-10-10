@@ -12,7 +12,7 @@ import {
   poolAccountsByEnv,
 } from '@sdods/core';
 import { createContext } from '../context.js';
-import { browserStatuses } from './browsers.js';
+import { browserStatuses, installBrowsers } from './browsers.js';
 import {
   MIN_PLAYWRIGHT_FOR_STEP_RESULTS,
   installedPlaywrightVersion,
@@ -79,8 +79,10 @@ export function registerDoctorCommand(program: Command) {
       checks.push(...browsers);
       if (opts.fix && browsers.some((b) => !b.ok)) {
         out(pc.cyan('Installing browsers…'));
-        await execa('npx', ['playwright', 'install', '--with-deps'], {
-          stdio: 'inherit',
+        // The same path as `sdods browsers install`, so the engines land where runs look for them.
+        await installBrowsers({
+          browsers: browsers.filter((b) => !b.ok).map((b) => b.name),
+          withDeps: process.platform === 'linux',
           cwd: ctx.rootDir,
         }).catch(() => undefined);
       }

@@ -17,6 +17,7 @@ import { parseFeatureFile, scenariosOf, type ParsedFeature } from './gherkin.js'
 import { projectRequirements } from '../analyze/traceability.js';
 import { checkStepAmbiguity } from './steps.js';
 import { ROLES_MATRIX_FILE, planMatrixExpansion } from '../matrix/index.js';
+import { toolCommand } from '../workspace-bin.js';
 
 export * from './gherkin.js';
 
@@ -361,7 +362,12 @@ export async function detectUndefinedSteps(
     SDODS_LINT: '1',
     SDODS_ARTIFACTS_DIR: join(repoRoot, '.sdods', 'lint'),
   };
-  const result = await execa('npx', ['bddgen', '-c', join(repoRoot, 'sdods.runner.config.ts')], {
+  const [file, ...argv] = toolCommand(repoRoot, [
+    'bddgen',
+    '-c',
+    join(repoRoot, 'sdods.runner.config.ts'),
+  ]);
+  const result = await execa(file, argv, {
     cwd: repoRoot,
     env,
     reject: false,
@@ -378,7 +384,7 @@ export async function detectUndefinedSteps(
     if (m) {
       const stepLine = lines[i + 1]?.trim() ?? '';
       out.push({
-        message: `Undefined step: ${stepLine || '(see bddgen output)'}`,
+        message: `Undefined step: ${stepLine || '(see the generator output)'}`,
         file: relative(project.root, m[1]!).replace(/\\/g, '/'),
         line: Number(m[2]),
       });
@@ -417,7 +423,7 @@ export async function detectUndefinedSteps(
       .join(' | ');
     out.push({
       rule: 'steps/bddgen',
-      message: `bddgen failed to generate specs (exit ${result.exitCode}): ${tail || '(no output)'}`,
+      message: `Could not generate specs from the features (exit ${result.exitCode}): ${tail || '(no output)'}`,
     });
   }
   return out;

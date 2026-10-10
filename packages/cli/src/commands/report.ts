@@ -34,6 +34,7 @@ import {
 import { createContext } from '../context.js';
 import { gateFailedError, printGates } from '../gates.js';
 import { json, ok, out, table, warn } from '../ui.js';
+import { toolCommand } from '../workspace-bin.js';
 
 function artifactsRoot(rootDir: string): string {
   return resolve(rootDir, process.env.SDODS_ARTIFACTS_DIR ?? '.sdods/runs');
@@ -413,7 +414,8 @@ export function register(program: Command) {
         reporters.join(','),
         workspace.reports,
       ];
-      const res = await execa('npx', args, {
+      const [file, ...argv] = toolCommand(ctx.rootDir, args);
+      const res = await execa(file, argv, {
         cwd: ctx.rootDir,
         reject: false,
         env: {
@@ -575,6 +577,7 @@ export function register(program: Command) {
     .command('show-report')
     .description('Open the HTML report of a run')
     .option('--run <id>', 'run id (default: latest)')
+    .option('--last', 'the latest run (the default; accepted so `report --last` habits work here)')
     .action(async (opts, cmd) => {
       const ctx = createContext(cmd);
       const root = artifactsRoot(ctx.rootDir);
@@ -584,9 +587,12 @@ export function register(program: Command) {
       const html = join(root, runId, runFiles.htmlReport, 'index.html');
       if (!existsSync(html))
         throw new SdodsError('RUN_FAILED', `No HTML report at ${html}.`, { exitCode: 2 });
-      await execa('npx', ['playwright', 'show-report', join(root, runId, runFiles.htmlReport)], {
-        stdio: 'inherit',
-        cwd: ctx.rootDir,
-      });
+      const [file, ...argv] = toolCommand(ctx.rootDir, [
+        'playwright',
+        'show-report',
+        join(root, runId, runFiles.htmlReport),
+      ]);
+      out(pc.cyan(`Serving the report of run ${runId}. Press Ctrl+C to stop.`));
+      await execa(file, argv, { stdio: 'inherit', cwd: ctx.rootDir });
     });
 }

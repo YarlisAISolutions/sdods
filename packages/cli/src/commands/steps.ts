@@ -5,6 +5,7 @@ import type { StepDef } from '@sdods/contracts';
 import { SdodsError, coreStepsDir } from '@sdods/core';
 import { createContext } from '../context.js';
 import { json, table } from '../ui.js';
+import { toolCommand } from '../workspace-bin.js';
 
 /** Parse `bddgen export` output (`* Given ...` lines) into StepDef[]. */
 export async function listSteps(
@@ -20,9 +21,10 @@ export async function listSteps(
   };
   const args = ['bddgen', 'export', '-c', join(rootDir, 'sdods.runner.config.ts')];
   if (opts.unused) args.push('--unused-steps');
-  const result = await execa('npx', args, { cwd: rootDir, env, reject: false, all: true });
+  const [file, ...argv] = toolCommand(rootDir, args);
+  const result = await execa(file, argv, { cwd: rootDir, env, reject: false, all: true });
   if (result.exitCode !== 0) {
-    throw new SdodsError('RUN_FAILED', `bddgen export failed for ${slug}.`, {
+    throw new SdodsError('RUN_FAILED', `Could not list the step definitions of ${slug}.`, {
       details: { output: result.all?.slice(-2000) },
     });
   }
@@ -53,7 +55,7 @@ export function register(program: Command) {
     .description('Inspect step definitions available to a project');
   steps
     .command('list')
-    .description('List all step definitions (core library + project) as seen by bddgen')
+    .description('List all step definitions (core library + project) as the run sees them')
     .requiredOption('-p, --project <slug>', 'project slug')
     .option('--unused', 'only steps not used by any feature')
     .option('--grep <text>', 'filter by substring')

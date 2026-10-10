@@ -8,6 +8,7 @@ import { BrowserSchema, type BrowserName } from '@sdods/contracts';
 import { SdodsError } from '@sdods/core';
 import { createContext } from '../context.js';
 import { collect, info, json, ok, table, warn } from '../ui.js';
+import { toolCommand } from '../workspace-bin.js';
 
 type Engine = 'chromium' | 'firefox' | 'webkit';
 
@@ -218,7 +219,7 @@ export async function ensureBrowsers(
   if (process.platform === 'linux') {
     warn(
       'If the browser then fails to launch with missing libraries, run ' +
-        `\`sudo npx playwright install-deps ${engines.join(' ')}\` once on this machine.`,
+        `\`sudo sdods browsers install --with-deps ${engines.map((e) => `-b ${e}`).join(' ')}\` once on this machine.`,
     );
   }
   ok(`Installed ${engines.join(', ')}`);
@@ -234,12 +235,18 @@ export async function installBrowsers(
   const channels = [...new Set(names.map((b) => CHANNEL_OF[b]).filter((c): c is string => !!c))];
   if (engines.length) {
     const args = ['playwright', 'install', ...(opts.withDeps ? ['--with-deps'] : []), ...engines];
-    await execa('npx', args, { stdio: 'inherit', cwd: opts.cwd });
+    const [file, ...argv] = toolCommand(opts.cwd ?? process.cwd(), args);
+    await execa(file, argv, { stdio: 'inherit', cwd: opts.cwd });
   }
   // Channels are a system install run by the vendor's own installer, so `--with-deps` does not
   // apply and they cannot share the engine invocation.
   for (const channel of channels) {
-    await execa('npx', ['playwright', 'install', channel], { stdio: 'inherit', cwd: opts.cwd });
+    const [file, ...argv] = toolCommand(opts.cwd ?? process.cwd(), [
+      'playwright',
+      'install',
+      channel,
+    ]);
+    await execa(file, argv, { stdio: 'inherit', cwd: opts.cwd });
   }
 }
 

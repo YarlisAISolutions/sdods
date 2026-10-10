@@ -6,6 +6,8 @@ import pc from 'picocolors';
 import { SdodsError, VERSION } from '@sdods/core';
 import { createContext } from '../context.js';
 import { json, ok, out, warn } from '../ui.js';
+import { toolCommand } from '../workspace-bin.js';
+import { ensureBrowsers } from './browsers.js';
 
 interface RecordFlags {
   project?: string;
@@ -58,6 +60,12 @@ async function recordAction(flags: RecordFlags, cmd: Command) {
 
   const name = flags.name ?? `rec-${new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19)}`;
   const browser = (flags.browser ?? 'chromium') as 'chromium' | 'firefox' | 'webkit';
+  // Before the recorder opens: otherwise a missing engine surfaces as the runner's own install
+  // instructions, which install to the wrong place.
+  await ensureBrowsers([browser], {
+    cwd: config.runtime.repoRoot,
+    install: process.env.SDODS_AUTO_INSTALL_BROWSERS === '1',
+  });
 
   // logged-in start: make sure the first user of the role has a fresh storage state
   let storageStatePath: string | undefined;
@@ -234,7 +242,8 @@ export function register(program: Command) {
 
 async function playwrightVersion(cwd: string): Promise<string | undefined> {
   try {
-    const { stdout } = await execa('npx', ['playwright', '--version'], { cwd });
+    const [file, ...argv] = toolCommand(cwd, ['playwright', '--version']);
+    const { stdout } = await execa(file, argv, { cwd });
     return stdout.trim().replace(/^Version\s+/i, '');
   } catch {
     return undefined;

@@ -48,7 +48,7 @@ export function buildProgram(): Command {
   const program = new Command('sdods');
   program
     .description(
-      'SDODS — automation and orchestration for reliable business workflows: BDD for UI, API and hybrid flows.',
+      'SDODS — BDD test automation for UI, API and hybrid flows that leaves release evidence behind every run.',
     )
     .version(VERSION, '-V, --version')
     .option('--json', 'machine-readable output')
@@ -62,7 +62,9 @@ export function buildProgram(): Command {
     // Root help only: 'after' is not inherited by subcommands.
     .addHelpText(
       'after',
-      `\nDocs: https://docs.sdods.com${SPONSOR_ENABLED ? `  ·  Sponsor: ${SPONSOR_URL}` : ''}`,
+      // The credit NOTICE requires in spirit: SDODS wraps the runner's commands, not its authorship.
+      `\nDocs: https://docs.sdods.com${SPONSOR_ENABLED ? `  ·  Sponsor: ${SPONSOR_URL}` : ''}\n` +
+        'Runs on Playwright (Apache-2.0) and playwright-bdd (MIT); see NOTICE.',
     );
 
   registerProjectCommands(program);

@@ -189,7 +189,7 @@ async function provider(overrides: Record<string, unknown> = {}) {
 function expectNoRemoteTrace(body: string) {
   expect(body).not.toMatch(/https?:\/\/\S*trace[^\s)]*\.zip/);
   expect(body).not.toMatch(/\]\([^)]*trace[^)]*\)/);
-  expect(body).not.toMatch(/show-trace\s+['"]?https?:/);
+  expect(body).not.toMatch(/(show-trace|sdods trace)\s+['"]?https?:/);
 }
 
 const ciEnv = {
@@ -439,9 +439,7 @@ describe('GitHubProvider', () => {
     );
     expect(body).toContain('`.sdods/runs/run-1/runner-output/login-chromium/trace.zip`');
     expect(body).toContain('contains credentials');
-    expect(body).toContain(
-      'npx playwright show-trace .sdods/runs/run-1/runner-output/login-chromium/trace.zip',
-    );
+    expect(body).toContain('sdods trace .sdods/runs/run-1/runner-output/login-chromium/trace.zip');
     expectNoRemoteTrace(body);
   });
 
@@ -455,9 +453,7 @@ describe('GitHubProvider', () => {
     const body: string = calls.find((c) => c.path === 'issues')!.body.body;
     expect(body).toContain('`run-1/runner-output/login-chromium/trace.zip`');
     expect(body).toContain('contains credentials');
-    expect(body).toContain(
-      'npx playwright show-trace run-1/runner-output/login-chromium/trace.zip',
-    );
+    expect(body).toContain('sdods trace run-1/runner-output/login-chromium/trace.zip');
     expect(body).not.toContain('- Video:');
     expectNoRemoteTrace(body);
   });

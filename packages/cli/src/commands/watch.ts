@@ -5,8 +5,9 @@ import pc from 'picocolors';
 import { newRunId } from '@sdods/contracts';
 import { SdodsError, listGeneratedProjects, normalizeTagExpr } from '@sdods/core';
 import { createContext } from '../context.js';
-import { workspaceBin } from '../workspace-bin.js';
+import { toolCommand, workspaceBin } from '../workspace-bin.js';
 import { collect, out } from '../ui.js';
+import { ensureBrowsers } from './browsers.js';
 
 interface WatchFlags {
   project?: string;
@@ -65,7 +66,8 @@ export function register(program: Command) {
         SDODS_REPORTER_MODE: 'quiet',
       };
       const configPath = join(ctx.rootDir, 'sdods.runner.config.ts');
-      const names = listGeneratedProjects(ctx.registry, selection).map((p) => p.name);
+      const targets = listGeneratedProjects(ctx.registry, selection);
+      const names = targets.map((p) => p.name);
       if (!names.length) {
         throw new SdodsError(
           'CONFIG_INVALID',
@@ -77,6 +79,10 @@ export function register(program: Command) {
         );
       }
 
+      await ensureBrowsers(
+        targets.map((p) => p.browser ?? 'chromium'),
+        { cwd: ctx.rootDir, install: process.env.SDODS_AUTO_INSTALL_BROWSERS === '1' },
+      );
       out(pc.cyan(`Watching ${entry.slug} (${cfg.env.name}) → ${names.join(', ')}`));
       const children: ResultPromise[] = [];
       const stop = () => {
@@ -94,9 +100,14 @@ export function register(program: Command) {
         reject: false,
       });
       if (gen.exitCode !== 0) {
-        throw new SdodsError('RUN_FAILED', 'bddgen failed; fix the errors above and retry.', {
-          exitCode: 1,
-        });
+        throw new SdodsError(
+          'RUN_FAILED',
+          'Could not generate specs from the features; fix the errors above and retry.',
+          {
+            hint: `Run \`sdods lint -p ${entry.slug} --undefined-steps\` to list them.`,
+            exitCode: 1,
+          },
+        );
       }
 
       const watcher = execa(bddgen, [...bddgenArgs, '-c', configPath, '--watch'], {
@@ -120,7 +131,8 @@ export function register(program: Command) {
       } else {
         pwArgs.push('--ui');
       }
-      const pw = execa('npx', pwArgs, {
+      const [pwFile, ...pwArgv] = toolCommand(ctx.rootDir, pwArgs);
+      const pw = execa(pwFile, pwArgv, {
         cwd: ctx.rootDir,
         env: childEnv,
         stdio: 'inherit',
