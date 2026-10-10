@@ -13,8 +13,7 @@ export function SiteFooter() {
             SDODS
           </div>
           <p className="muted mt-2">
-            An automation platform with a reusable architecture. Open source, Apache-2.0. API tokens
-            are free.
+            Release evidence, not just green checks. Open source, Apache-2.0. API tokens are free.
           </p>
         </div>
         <div>

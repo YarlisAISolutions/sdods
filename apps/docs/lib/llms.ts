@@ -36,7 +36,7 @@ export function llmsIndex(): string {
   const lines = [
     '# SDODS',
     '',
-    '> SDODS is an automation platform with a reusable architecture: BDD for UI, API and hybrid flows, multi-project, data-driven, self-healing, with an MCP server and AI agents.',
+    '> SDODS is open-source BDD test automation for UI, API and hybrid flows that leaves screenshots, requests and run history behind every run: multi-project, data-driven, self-healing, with an MCP server and AI agents.',
     '',
     `The full text of every page is at ${absoluteUrl('/llms-full.txt')}.`,
     '',

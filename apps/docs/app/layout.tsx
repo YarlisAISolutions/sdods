@@ -10,14 +10,15 @@ export const metadata: Metadata = {
   metadataBase: new URL(`${siteUrl}${basePath}/`),
   title: { template: '%s | SDODS', default: 'SDODS' },
   description:
-    'SDODS is an automation platform with a reusable architecture: BDD for UI, API and hybrid automation, multi-project, data-driven, self-healing, with an MCP server and AI agents.',
+    'SDODS docs: open-source BDD test automation for UI and API that leaves screenshots, requests and run history behind every run. Self-healing, multi-project, with an MCP server and AI agents.',
   icons: { icon: withBase('/img/favicon.svg') },
   openGraph: {
     title: 'SDODS',
-    description: 'An automation platform with a reusable architecture.',
+    description: 'Release evidence, not just green checks.',
     url: `${siteUrl}${basePath}/`,
     siteName: 'SDODS',
-    images: [{ url: withBase('/img/sdods-logo.svg') }],
+    // A PNG, and sdods.com's: LinkedIn, X and Slack show no preview for an SVG og:image.
+    images: [{ url: 'https://sdods.com/img/og.png', width: 1200, height: 630 }],
   },
 };
 
