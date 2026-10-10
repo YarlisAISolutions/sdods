@@ -1,5 +1,12 @@
 # @sdods/agents
 
+## 0.13.0
+
+### Patch Changes
+
+- @sdods/contracts@0.13.0
+  - @sdods/mcp@0.13.0
+
 ## 0.12.1
 
 ### Patch Changes

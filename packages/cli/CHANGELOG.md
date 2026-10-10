@@ -1,5 +1,38 @@
 # @sdods/cli
 
+## 0.13.0
+
+### Minor Changes
+
+- b98156e: `sdods run` has its own console output. Each scenario is one line, `[n/total] ✔ Feature › Scenario
+  [ui · chromium] (1.2s)`, in place of the runner's generated spec paths and hook lines. Failures
+  show the feature file, the error (without generated-spec code or browser launch logs), the failure
+  screenshot, the video and `sdods trace <zip>`. `run --list` lists scenarios by title. New `--open
+  always|on-failure|never` (or `SDODS_OPEN`) opens the SDODS dashboard after a run; by default only
+  on failure at an interactive terminal, never in CI or under a coding agent. The web UI puts the
+  SDODS dashboard first and labels the HTML report and trace viewer as Playwright's.
+
+### Patch Changes
+
+- 357cd91: `sdods run` no longer ends with the runner's "To open last HTML report run: npx playwright
+  show-report" hint. It prints the SDODS command to open the results instead, and `sdods trace --run
+  <id>` after a failure. Every runner and generator invocation (`run`, `watch`, `lint`, `steps list`,
+  `record`, `auth capture`, `trace`, `show-report`, `report merge`, `browsers install`) now resolves
+  the workspace's own package instead of a bare `npx`, which could prompt to download a package or
+  fetch an unrelated one. `watch`, `record` and `auth capture` check for missing browsers up front
+  and name `sdods browsers install`; `doctor --fix` and `init` install browsers through the same
+  path. GitHub failure issues name `sdods trace <zip>`. `show-report` accepts `--last`. `sdods
+  --help` credits Playwright and playwright-bdd.
+- Updated dependencies [b98156e]
+- Updated dependencies [357cd91]
+  - @sdods/core@0.13.0
+  - @sdods/integrations@0.13.0
+  - @sdods/server@0.13.0
+  - @sdods/agents@0.13.0
+  - @sdods/contracts@0.13.0
+  - @sdods/db@0.13.0
+  - @sdods/mcp@0.13.0
+
 ## 0.12.1
 
 ### Patch Changes
