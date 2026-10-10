@@ -48,15 +48,13 @@ export default function HomePage() {
             page's text colour: as an image its ink was baked to #0B1020 and disappeared against
             the dark background. The heading text is spelled out for anything that cannot see it. */}
         <h1 className="w-full max-w-lg">
-          <span className="sr-only">
-            SDODS — an automation platform with a reusable architecture
-          </span>
+          <span className="sr-only">SDODS — release evidence, not just green checks</span>
           <SdodsLockup className="w-full max-w-lg" />
         </h1>
         <p className="mt-6 max-w-2xl text-lg text-fd-muted-foreground">
-          An automation platform with a reusable architecture. BDD for UI, API and hybrid flows,
-          multi-project and multi-environment, data-driven, self-healing, with a web UI, an MCP
-          server and AI agents.
+          Open-source BDD test automation for UI, API and hybrid flows that leaves screenshots,
+          requests and run history behind every run. Multi-project and multi-environment,
+          data-driven, self-healing, with a web UI, an MCP server and AI agents.
         </p>
         <div className="mt-6 flex flex-wrap justify-center gap-3">
           <Link
