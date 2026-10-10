@@ -15,11 +15,11 @@
     "bundle": "bun build src/main.ts --target=node --outfile=dist/community.js"
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "^0.125.0",
-    "@fastify/rate-limit": "^11.2.0",
+    "@anthropic-ai/sdk": "^0.133.0",
+    "@fastify/rate-limit": "^11.2.1",
     "@sdods/qa-archive": "workspace:*",
-    "fastify": "^5.12.4",
-    "jose": "^6.2.10",
+    "fastify": "^5.12.5",
+    "jose": "^6.2.12",
     "zod": "^4.6.5"
   },
   "engines": {

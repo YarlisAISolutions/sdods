@@ -31,7 +31,7 @@
     "@sdods/contracts": "workspace:*",
     "@sdods/core": "workspace:*",
     "commander": "^15.0.0",
-    "execa": "^10.0.1",
+    "execa": "^10.1.0",
     "picocolors": "^1.1.1",
     "semver": "^7.8.5",
     "yaml": "^2.9.1",
@@ -42,7 +42,7 @@
     "@sdods/mcp": "workspace:*",
     "@sdods/agents": "workspace:*",
     "@sdods/db": "workspace:*",
-    "csv-parse": "^7.0.2",
+    "csv-parse": "^7.0.3",
     "@sdods/server": "workspace:*"
   },
   "devDependencies": {
