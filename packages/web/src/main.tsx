@@ -12,7 +12,7 @@ async function boot() {
   initTheme();
   if (import.meta.env.VITE_USE_MOCKS === '1') {
     const { worker } = await import('./mocks/browser');
-    await worker.start({ onUnhandledRequest: 'bypass', quiet: true });
+    await worker.start({ onUnhandledFrame: 'bypass', quiet: true });
   }
   const queryClient = new QueryClient({
     defaultOptions: { queries: { retry: 1, refetchOnWindowFocus: false, staleTime: 5_000 } },

@@ -302,7 +302,7 @@ function issueHandlers() {
   ];
 }
 
-beforeAll(() => server.listen({ onUnhandledRequest: 'error' }));
+beforeAll(() => server.listen({ onUnhandledFrame: 'error' }));
 afterEach(() => {
   server.resetHandlers();
   git = new FakeGit();

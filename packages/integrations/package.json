@@ -27,7 +27,7 @@
     "zod": "^4.6.5"
   },
   "devDependencies": {
-    "msw": "^2.15.0"
+    "msw": "^3.0.3"
   },
   "homepage": "https://sdods.com",
   "bugs": {
