@@ -4,6 +4,7 @@ import { execa } from 'execa';
 import type { ResolvedConfig } from '../config/resolve.js';
 import { SdodsError } from '../errors.js';
 import { harPath, safeHarName } from '../har/paths.js';
+import { toolCommand } from '../workspace-bin.js';
 
 export type CodegenBrowser = 'chromium' | 'firefox' | 'webkit';
 
@@ -94,7 +95,8 @@ export async function runCodegen(opts: CodegenOptions): Promise<CodegenResult> {
   const { args, outputFile, harFile } = buildCodegenArgs(opts);
   mkdirSync(recordedDir(opts.config), { recursive: true });
   if (harFile) mkdirSync(join(harFile, '..'), { recursive: true });
-  const res = await execa('npx', args, {
+  const [file, ...argv] = toolCommand(opts.config.runtime.repoRoot, args);
+  const res = await execa(file, argv, {
     cwd: opts.config.runtime.repoRoot,
     stdio: 'inherit',
     reject: false,
@@ -105,7 +107,7 @@ export async function runCodegen(opts: CodegenOptions): Promise<CodegenResult> {
   if (exitCode !== 0 && !produced) {
     throw new SdodsError(
       'RUN_FAILED',
-      `playwright codegen exited with code ${exitCode} and produced no spec.`,
+      `The recorder closed with code ${exitCode} before saving a spec.`,
       {
         hint: 'Codegen needs a display. On a headless machine, record on your workstation or import an existing spec into recorded/.',
         exitCode: 1,

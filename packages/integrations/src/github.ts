@@ -768,7 +768,7 @@ export class GitHubProvider implements IntegrationProvider<GitHubConfig> {
         `> ${TRACE_CREDENTIALS_WARNING}`,
         '',
         '```bash',
-        `npx playwright show-trace ${shellArg(local)}`,
+        `sdods trace ${shellArg(local)}`,
         '```',
       );
     }

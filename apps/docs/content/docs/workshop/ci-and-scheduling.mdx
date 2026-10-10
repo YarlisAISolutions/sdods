@@ -77,7 +77,7 @@ jobs:
       - uses: actions/checkout@v7
       - uses: oven-sh/setup-bun@v2
       - run: bun install --frozen-lockfile
-      - run: bunx playwright install --with-deps chromium
+      - run: bun run sdods browsers install --with-deps -b chromium
       - run: bun run sdods run -p rwa-bank -e ci -t @smoke --shard ${{ matrix.shard }}/3
       - uses: actions/upload-artifact@v7
         if: always()

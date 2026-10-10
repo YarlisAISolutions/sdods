@@ -108,7 +108,7 @@ body:
     id: media
     attributes:
       label: Screenshots / videos
-      description: Drag files here, or link run artifacts (video.webm, trace.zip with `npx playwright show-trace <file>`). Write "n/a" for config-only work.
+      description: Drag files here, or link run artifacts (video.webm, trace.zip with `sdods trace <file>`). Write "n/a" for config-only work.
     validations:
       required: true
 

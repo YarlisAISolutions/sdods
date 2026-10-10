@@ -87,7 +87,7 @@ Only the evidence branch renders images inline in a private repository. Release 
 Neither provider uploads, attaches or links `trace.zip`, with or without `uploadToRelease`. The issue names the trace's local path (or its path inside the CI run's artifacts) under a warning, with the command to open it on a machine that already has the run:
 
 ```bash
-npx playwright show-trace .sdods/runs/<runId>/runner-output/<test>/trace.zip
+sdods trace .sdods/runs/<runId>/runner-output/<test>/trace.zip   # or: sdods trace --run <runId>
 ```
 
 `sdods run` also redacts every trace after the run (`evidence.redactTraces`, on by default): credential headers, cookies, storage and password values become `[redacted]`. Redaction does not cover request or response bodies, page text or screenshots, so a redacted trace is still not for publishing. On a public repository, anyone signed in to GitHub can download a workflow's artifacts; keep traces out of uploaded artifacts there, or set `evidence.trace: off` in CI.

@@ -40,7 +40,7 @@ import {
 } from '@sdods/core';
 import { analyzeChangeImpact } from '@sdods/mcp';
 import { createContext } from '../context.js';
-import { workspaceBin } from '../workspace-bin.js';
+import { toolCommand, workspaceBin } from '../workspace-bin.js';
 import { browserStatuses, ensureBrowsers } from './browsers.js';
 import { gateFailedError, printGates } from '../gates.js';
 import { maybeNotify, notifyRun, type AutoNotifyOutcome } from '../notify.js';
@@ -493,7 +493,7 @@ export async function runCommand(flags: RunFlags, cmd: Command): Promise<number>
     });
     if (gen.exitCode !== 0) {
       if (ctx.opts.quiet && gen.stderr) process.stderr.write(gen.stderr + '\n');
-      throw new SdodsError('RUN_FAILED', 'bddgen failed to generate specs.', {
+      throw new SdodsError('RUN_FAILED', 'Could not generate specs from the features.', {
         hint: 'Run `sdods lint -p <slug> --undefined-steps` to find undefined steps.',
         exitCode: 2,
       });
@@ -565,7 +565,8 @@ export async function runCommand(flags: RunFlags, cmd: Command): Promise<number>
       if (setup && p.layer !== 'recorded') out(`  ${p.name}--setup`);
       out(`  ${p.name}`);
     }
-    const listed = await execa('npx', args, {
+    const [listFile, ...listArgv] = toolCommand(ctx.rootDir, args);
+    const listed = await execa(listFile, listArgv, {
       cwd: ctx.rootDir,
       env: childEnv,
       stdio: 'inherit',
@@ -583,10 +584,15 @@ export async function runCommand(flags: RunFlags, cmd: Command): Promise<number>
   );
   out(pc.dim(`projects: ${runnerProjects.map((p) => p.name).join(', ')}`));
   const started = Date.now();
-  const child = execa('npx', args, {
+  const [runFile, ...runArgv] = toolCommand(ctx.rootDir, args);
+  const interactive = Boolean(flags.ui || flags.debug);
+  const child = execa(runFile, runArgv, {
     cwd: ctx.rootDir,
     env: childEnv,
-    stdio: 'inherit',
+    // stdin is only for the runner's interactive modes. Given a terminal on stdin, the HTML
+    // reporter ends every run with "To open last HTML report run: npx playwright show-report",
+    // a command for a tool the user never installed by name; SDODS prints its own below.
+    stdio: [interactive ? 'inherit' : 'ignore', 'inherit', 'inherit'],
     reject: false,
   });
   const onSignal = () => child.kill('SIGTERM');
@@ -747,6 +753,10 @@ export async function runCommand(flags: RunFlags, cmd: Command): Promise<number>
     out(pc.dim(`artifacts:   ${runDir}`));
     out(pc.dim(`html report: ${join(runDir, runFiles.htmlReport, 'index.html')}`));
     out(pc.dim(`dashboard:   ${join(runDir, runFiles.dashboard, 'index.html')}`));
+    out('');
+    out(`  open the results:  ${pc.cyan(`sdods report --run ${runId} --open`)}`);
+    if (finalExit !== 0 && finalExit !== 130)
+      out(`  step through it:   ${pc.cyan(`sdods trace --run ${runId}`)}`);
   }
   if (gates && !gates.passed)
     renderError(gateFailedError(gates, join(runDir, runFiles.gates)), Boolean(ctx.opts.json));

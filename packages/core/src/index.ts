@@ -1,5 +1,6 @@
 export * from './errors.js';
 export * from './logger.js';
+export * from './workspace-bin.js';
 export * from './config/index.js';
 export * from './api/index.js';
 export * from './auth/index.js';

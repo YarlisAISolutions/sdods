@@ -3,6 +3,7 @@ import { execa } from 'execa';
 import { SdodsError } from '@sdods/core';
 import { createContext } from '../context.js';
 import { json, ok, table } from '../ui.js';
+import { ensureBrowsers } from './browsers.js';
 
 /**
  * Login-state commands. Capture/list are thin wrappers over `@sdods/core/auth/capture`
@@ -32,6 +33,10 @@ export function register(program: Command) {
       const ctx = createContext(cmd);
       const cfg = ctx.registry.resolve(opts.project, opts.env);
       const { captureAuth, poolUsers } = await import('@sdods/core/auth/capture');
+      await ensureBrowsers([opts.browser ?? 'chromium'], {
+        cwd: ctx.rootDir,
+        install: process.env.SDODS_AUTO_INSTALL_BROWSERS === '1',
+      });
       const roles: string[] = opts.user
         ? [opts.user]
         : [...new Set((await poolUsers(cfg)).map((u) => u.role))];

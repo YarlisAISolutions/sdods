@@ -15,6 +15,7 @@ import pc from 'picocolors';
 import { OrganizationSchema, SlugSchema, WorkspaceSchema } from '@sdods/contracts';
 import { SdodsError, VERSION, WORKSPACE_FILE } from '@sdods/core';
 import { globalOptions } from '../context.js';
+import { installBrowsers } from './browsers.js';
 import { installSkills } from '../skills-catalog.js';
 import { json, ok, out, warn } from '../ui.js';
 
@@ -429,12 +430,10 @@ Docs: https://docs.sdods.com
   }
   let browsersInstalled = false;
   if (flags.install && flags.browsers && installed) {
-    const res = await execa('npx', ['playwright', 'install', 'chromium'], {
-      cwd: target,
-      stdio: 'inherit',
-      reject: false,
-    });
-    browsersInstalled = res.exitCode === 0;
+    browsersInstalled = await installBrowsers({ browsers: ['chromium'], cwd: target }).then(
+      () => true,
+      () => false,
+    );
   }
 
   if (flags.claude) {
