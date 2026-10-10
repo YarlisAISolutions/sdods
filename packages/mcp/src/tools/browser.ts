@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { BrowserSchema } from '@sdods/contracts';
 import { BROWSER_TOOLS } from '../browser/manifest.js';
-import { UNSAFE_DISABLED_HINT, unsafeToolsEnabled } from '../browser/policy.js';
+import { UNSAFE_DISABLED_HINT, confineOutputFile, unsafeToolsEnabled } from '../browser/policy.js';
 import { UPSTREAM_SHAPES, type UpstreamToolName } from '../browser/shapes.js';
 import type { BrowserSessionManager } from '../browser/session.js';
 import { defineTool, summarize, type SdodsTool, type ToolContext } from '../registry/registry.js';
@@ -101,7 +101,10 @@ function wrap(name: UpstreamToolName): SdodsTool<any> {
         });
 
       const entry = await mgr.ensure(id, { project: ctx.project!, env: ctx.env });
-      const result = await entry.driver.call(name, args as Record<string, unknown>);
+      const result = await entry.driver.call(
+        name,
+        confineOutputFile(name, args as Record<string, unknown>, entry.info.outputDir),
+      );
       return {
         text: clip(result.text) || `${name} ok`,
         images: result.images,

@@ -1,6 +1,13 @@
 import { describe, expect, it } from 'vitest';
 import { hasScope } from '@sdods/contracts';
-import { redactHeaders, unsafeToolsEnabled } from '../src/browser/policy.js';
+import { join } from 'node:path';
+import {
+  OUTPUT_FILE_TOOLS,
+  confineOutputFile,
+  redactHeaders,
+  unsafeToolsEnabled,
+} from '../src/browser/policy.js';
+import { UPSTREAM_SHAPES } from '../src/browser/shapes.js';
 import { ToolRegistry, requiredScope, type Principal } from '../src/registry/registry.js';
 import { browserTools } from '../src/tools/browser.js';
 
@@ -98,5 +105,53 @@ describe('browser scopes', () => {
     const admin = principal(['*']);
     const noBrowser = new Set(['core' as const]);
     expect(registry.list({ principal: admin, caps: noBrowser })).toEqual([]);
+  });
+});
+
+describe('browser output files', () => {
+  const out = join('/work', 'repo', '.sdods', 'browser', 's1');
+
+  it('resolve a relative name inside the session output directory, not the repository', () => {
+    const args = confineOutputFile('browser_take_screenshot', { filename: 'shot.png' }, out);
+    expect(args.filename).toBe(join(out, 'shot.png'));
+    expect(confineOutputFile('browser_snapshot', { filename: 'a/b.yml', depth: 2 }, out)).toEqual({
+      filename: join(out, 'a', 'b.yml'),
+      depth: 2,
+    });
+  });
+
+  it('accept an absolute path that is already inside it', () => {
+    const inside = join(out, 'net.txt');
+    expect(confineOutputFile('browser_network_requests', { filename: inside }, out).filename).toBe(
+      inside,
+    );
+  });
+
+  it.each([
+    '../../../src/app.ts',
+    join('/work', 'repo', 'package.json'),
+    join('/work', 'repo', '.sdods', 'browser', 's10', 'x.png'),
+    '.',
+  ])('refuse %s, which would land outside it', (filename) => {
+    expect(() => confineOutputFile('browser_find', { filename }, out)).toThrow(
+      /outside the session output directory/,
+    );
+  });
+
+  it('leave calls without a file name, and tools that read a file, alone', () => {
+    const none = { text: 'Hello' };
+    expect(confineOutputFile('browser_find', none, out)).toBe(none);
+    const code = { filename: 'scripts/check.js' };
+    expect(confineOutputFile('browser_run_code_unsafe', code, out)).toBe(code);
+  });
+
+  it('cover every upstream tool that takes a filename to write', () => {
+    // A new upstream tool with a `filename` must be classified here, or it writes into the repo.
+    const withFilename = Object.entries(UPSTREAM_SHAPES)
+      .filter(([, shape]) => 'filename' in shape)
+      .map(([name]) => name)
+      .filter((name) => name !== 'browser_run_code_unsafe');
+    expect(withFilename.filter((name) => !OUTPUT_FILE_TOOLS.has(name))).toEqual([]);
+    for (const name of OUTPUT_FILE_TOOLS) expect(UPSTREAM_SHAPES).toHaveProperty(name);
   });
 });
