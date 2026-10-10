@@ -29,7 +29,8 @@ export interface BrowserToolSpec {
  * Two deliberate divergences from upstream's own annotations:
  *  - `browser_take_screenshot` and `browser_pdf_save` write files, and upstream still marks them
  *    read-only. They stay `read` here because they only write into the session's own output
- *    directory, but the note says so rather than leaving it implied.
+ *    directory (`confineOutputFile` in policy.ts refuses anything else), but the note says so
+ *    rather than leaving it implied.
  *  - Everything that changes page state is `write`, including `browser_navigate`, which upstream
  *    does not flag. Navigating away is not an observation.
  */
