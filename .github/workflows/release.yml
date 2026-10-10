@@ -310,6 +310,25 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+      # A rebuild (image_only) publishes nothing, so changesets reports no version and the image
+      # would only move `latest`. Tag it with the CLI version committed here instead, once npm
+      # confirms that version exists: on `main` that is the release the image is rebuilt for.
+      - name: Version of a rebuild
+        id: rebuild
+        if: inputs.image_only
+        env:
+          REF: ${{ github.sha }}
+          REPO: ${{ github.repository }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          version=$(gh api "repos/$REPO/contents/packages/cli/package.json?ref=$REF" \
+            -H 'Accept: application/vnd.github.raw' | jq -r .version)
+          if [ "$(npm view "@sdods/cli@$version" version 2>/dev/null)" = "$version" ]; then
+            echo "version=$version" >> "$GITHUB_OUTPUT"
+            echo "rebuilding the image for @sdods/cli $version"
+          else
+            echo "@sdods/cli $version is not on npm; tagging latest only"
+          fi
       - id: meta
         uses: docker/metadata-action@v6
         with:
@@ -318,6 +337,7 @@ jobs:
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
             type=raw,value=${{ needs.changesets.outputs.version }},enable=${{ needs.changesets.outputs.version != '' }}
+            type=raw,value=${{ steps.rebuild.outputs.version }},enable=${{ steps.rebuild.outputs.version != '' }}
             type=raw,value=latest
       - name: Join both architectures under the release tags
         working-directory: ${{ runner.temp }}/digests
