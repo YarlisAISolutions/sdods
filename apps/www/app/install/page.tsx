@@ -40,7 +40,8 @@ const STEPS: Array<[string, string]> = [
 ];
 
 const AFTER: Array<[string, string]> = [
-  ['Run the demo suite', 'cd ~/.sdods/app && sdods run -p demo-shop -e staging -l api'],
+  ['Create a workspace', 'sdods init ~/my-tests && cd ~/my-tests   # includes the demo project'],
+  ['Run the demo suite', 'sdods run -p demo-shop -e staging -l api'],
   ['Try the UI layer', 'sdods run -p demo-shop -e staging -l ui -b chromium -t @smoke'],
   ['See the results', 'sdods report --last --open'],
   ['Open the web UI', 'sdods serve'],
