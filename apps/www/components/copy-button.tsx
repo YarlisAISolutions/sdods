@@ -25,6 +25,8 @@ export function CopyButton({
         type="button"
         className="btn btn-secondary shrink-0"
         aria-label={`${label} the ${what}`}
+        data-track="copy_command"
+        data-track-what={what}
         onClick={() => {
           navigator.clipboard?.writeText(text).then(
             () => setCopied(true),

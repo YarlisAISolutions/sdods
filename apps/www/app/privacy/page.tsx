@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { FEEDBACK_EMAIL, REPO_PUBLIC, REPO_URL } from '@/lib/links';
+import { ANALYTICS_ENABLED } from '@/lib/analytics';
 import { SPONSOR_PUBLIC } from '@/lib/sponsor';
 
 export const metadata: Metadata = {
@@ -20,6 +21,20 @@ export default function PrivacyPage() {
           light/dark theme preference, in local storage. Firebase Hosting keeps standard server logs
           (IP address, user agent, requested path) for a limited time, as any web host does.
         </p>
+        {ANALYTICS_ENABLED && (
+          <>
+            <h2 className="mt-6 text-lg font-bold">Anonymous page counts</h2>
+            <p>
+              sdods.com counts page views and clicks on a few buttons (install, docs, copying a
+              command) so we can tell whether a change to the site helped. Each event carries the
+              page path, the referring site without its path, the window width and a random id that
+              lives in memory for one tab and is gone when you reload. No cookies, no local storage,
+              no fingerprinting, no session recording and no profile of you. Events are sent to
+              PostHog, our analytics processor. If your browser sends Global Privacy Control or Do
+              Not Track, nothing is sent at all.
+            </p>
+          </>
+        )}
         <h2 className="mt-6 text-lg font-bold">Feedback and feature requests</h2>
         {REPO_PUBLIC ? (
           <p>

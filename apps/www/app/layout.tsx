@@ -4,31 +4,52 @@ import { ThemeProvider } from 'next-themes';
 import { SiteHeader } from '@/components/site-header';
 import { SiteFooter } from '@/components/site-footer';
 import { Maxi } from '@/components/maxi';
+import { Analytics } from '@/components/analytics';
 import { SITE_URL } from '@/lib/links';
 import '@sdods/site-kit/styles.css';
 import './global.css';
+
+const OG_DESCRIPTION =
+  'Open-source BDD tests for UI and API that leave screenshots, requests and history behind every run.';
+const OG_ALT = 'SDODS: release evidence, not just green checks';
+
+/** schema.org description of the product, for search engines' rich results. */
+const JSON_LD = {
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareApplication',
+  name: 'SDODS',
+  url: SITE_URL,
+  description: OG_DESCRIPTION,
+  applicationCategory: 'DeveloperApplication',
+  operatingSystem: 'macOS, Windows, Linux',
+  license: 'https://www.apache.org/licenses/LICENSE-2.0',
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+};
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
     template: '%s | SDODS',
-    default: 'SDODS — an automation platform with a reusable architecture',
+    default: 'SDODS — BDD test automation with release evidence',
   },
   description:
-    'SDODS: BDD for UI, API and hybrid automation, multi-project and multi-environment, data-driven, self-healing, with before/after screenshot narratives, SQLite or Postgres, an MCP server, AI agents, GitHub and Jira integration and a web UI. Open source, Apache-2.0.',
+    'Open-source BDD tests for UI and API that leave before/after screenshots, requests and run history behind, so anyone can say yes to a release.',
   icons: { icon: '/img/favicon.svg' },
   openGraph: {
-    title: 'SDODS',
-    description: 'An automation platform with a reusable architecture.',
+    title: 'SDODS — release evidence, not just green checks',
+    description: OG_DESCRIPTION,
     url: SITE_URL,
     siteName: 'SDODS',
     type: 'website',
-    images: [{ url: '/img/sdods-logo.svg', width: 640, height: 160, alt: 'SDODS' }],
+    // A PNG: LinkedIn, X, Slack and iMessage show no preview at all for an SVG og:image.
+    // Regenerate with `bun run --cwd apps/www og-image`.
+    images: [{ url: '/img/og.png', width: 1200, height: 630, alt: OG_ALT }],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'SDODS',
-    description: 'An automation platform with a reusable architecture.',
+    title: 'SDODS — release evidence, not just green checks',
+    description: OG_DESCRIPTION,
+    images: [{ url: '/img/og.png', alt: OG_ALT }],
   },
   // './' resolves against metadataBase *and the current route*, so every page declares itself
   // canonical. A literal SITE_URL here told Google that /install, /download and every other page
@@ -40,6 +61,11 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body className="min-h-screen flex flex-col">
+        <script
+          type="application/ld+json"
+          // A static object of our own, not user input.
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(JSON_LD) }}
+        />
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
@@ -58,6 +84,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           </main>
           <SiteFooter />
           <Maxi />
+          <Analytics />
         </ThemeProvider>
       </body>
     </html>

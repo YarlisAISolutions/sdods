@@ -106,7 +106,7 @@ Options (`--workspace`, `--browsers all`, `--mcp claude`, `--version`, `--uninst
 [installer reference](https://docs.sdods.com/docs/reference/installer/).
 
 ```bash
-cd ~/.sdods/app
+sdods init ~/my-tests && cd ~/my-tests                          # a workspace with the demo project
 sdods run -p demo-shop -e staging -l api                        # API layer, no browser
 sdods run -p demo-shop -e staging -l ui -b chromium -t @smoke   # UI smoke
 sdods report --last --open                                      # HTML report + dashboard

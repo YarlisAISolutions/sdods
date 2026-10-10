@@ -9,63 +9,46 @@ import {
 } from '@/lib/ai-tools';
 import { DOCS_URL, REPO_PUBLIC, REPO_URL } from '@/lib/links';
 
-const WHY: Array<[string, string]> = [
+/**
+ * One grid. There used to be a "Why" grid above this one, and between them they said
+ * "before/after screenshots", "BDD for UI and API" and "data" twice each.
+ */
+const FEATURES: Array<[string, string]> = [
   [
-    'UI, API and mixed scenarios in one language',
+    'UI, API and hybrid in one language',
     'Gherkin with one merged fixture set, so a scenario can seed through the API and assert in the browser.',
   ],
   [
-    'Many apps, many environments',
-    'One YAML per project plus one per environment; strict, explainable configuration precedence; secrets only through ${VAR}.',
-  ],
-  [
-    'Reusable data',
-    'CSV, JSON, YAML, database tables and faker factories per environment, plus user pools leased per worker with login-state reuse.',
-  ],
-  [
-    'Confidence across browsers',
-    'Chromium, Edge, Firefox, WebKit and mobile emulation; --project-matrix runs every browser you declared, @skip:<browser> is validated by lint.',
-  ],
-  [
-    'Readable results',
-    'Before/after screenshots per step by suite tag, API request/response snapshots, and a run viewer with slider, overlay and pixel diff.',
-  ],
-  [
-    'Institutional memory',
-    'Cucumber NDJSON ingested into SQLite or Postgres: flakiness, locator fragility, environment stability and suite health over time.',
-  ],
-];
-
-const FEATURES: Array<[string, string]> = [
-  [
-    'BDD for UI, API and hybrid',
-    'Reusable step library, page objects with decorators, module and process taxonomy.',
-  ],
-  [
-    'Data and user pools',
-    'Per-environment datasets, factories, leased accounts, cached storage state.',
+    'Before/after narratives',
+    'A screenshot before and after every UI step, API request/response snapshots and visual baselines, chosen per suite tag.',
   ],
   [
     'Self-healing locators',
     'Scored candidate probes, persisted heal history, proposals to fix page objects.',
   ],
-  ['Before/after narratives', 'Screenshot policy by suite tag; visual baselines; API snapshots.'],
-  ['SQLite or Postgres', 'One schema, runtime toggle, verified switch in both directions.'],
+  [
+    'Many apps, many environments',
+    'One YAML per project plus one per environment, explainable precedence, secrets only through ${VAR}.',
+  ],
+  [
+    'Data and user pools',
+    'CSV, JSON, YAML, database tables and faker factories per environment; accounts leased per worker with login-state reuse.',
+  ],
+  [
+    'Every browser you ship to',
+    'Chromium, Edge, Firefox, WebKit and mobile emulation; --project-matrix runs them all, and lint validates @skip:<browser>.',
+  ],
+  [
+    'Run history that remembers',
+    'Results in SQLite or Postgres: flakiness, locator fragility, environment stability and suite health over time.',
+  ],
   [
     'MCP server and agents',
     '85 tools for Claude Code, Codex, Cursor, VS Code, Gemini CLI and any MCP client; a Claude Code plugin; planner, generator, healer, upgrader.',
   ],
   [
-    'GitHub and Jira',
-    'Check runs, PR comments, deduplicated issues, @jira:KEY links, transitions.',
-  ],
-  [
-    'Schedules',
-    'Cron recipes with overlap policy; runs from the server, crontab, launchd, systemd or Actions.',
-  ],
-  [
-    'Web UI with roles',
-    'Organizations, workspaces, projects, modules; run viewer, Gherkin editor, tokens.',
+    'CI, GitHub and Jira',
+    'Check runs, PR comments, deduplicated issues and @jira:KEY links; cron schedules from the server, crontab, systemd or Actions; a web UI with roles.',
   ],
 ];
 
@@ -102,50 +85,115 @@ export default function HomePage() {
     <>
       <section className="mx-auto max-w-6xl px-4 pb-12 pt-16 text-center md:pt-24">
         <p className="mb-4 inline-block rounded-full border border-[var(--line)] px-3 py-1 text-xs muted">
-          {REPO_PUBLIC ? 'Open source' : 'Free'} · Apache-2.0 · API tokens are free
+          {REPO_PUBLIC ? 'Open source' : 'Free'} · Apache-2.0 · BDD for UI and API
         </p>
         <h1 className="mx-auto max-w-4xl text-4xl font-extrabold tracking-tight md:text-6xl">
-          <span className="brand-gradient">SDODS</span> — an automation platform with a reusable
-          architecture
+          Release evidence, <span className="brand-gradient">not just green checks</span>
         </h1>
         <p className="muted mx-auto mt-6 max-w-2xl text-lg">
-          BDD for UI, API and hybrid flows. Multi-project, multi-environment, data-driven and
-          self-healing, with before/after screenshot narratives, a database-backed history, an MCP
-          server, AI agents, GitHub and Jira integration and a web UI.
+          <strong className="text-[var(--fg)]">SDODS</strong> runs BDD tests for UI and API flows
+          and leaves the proof behind: before/after screenshots of every step, the requests that
+          produced them, and a history of every run. Anyone on the team can say yes to a release.
         </p>
         <div className="mt-8 flex flex-wrap justify-center gap-3">
-          <Link href="/install/" className="btn btn-primary">
+          <a
+            href="#install"
+            className="btn btn-primary"
+            data-track="cta_click"
+            data-track-where="hero"
+          >
             Install SDODS
-          </Link>
-          <a href={DOCS_URL} className="btn btn-secondary">
+          </a>
+          <a
+            href={DOCS_URL}
+            className="btn btn-secondary"
+            data-track="cta_click"
+            data-track-where="hero-docs"
+          >
             Read the docs
           </a>
-          {REPO_PUBLIC && (
-            <a href={REPO_URL} className="btn btn-secondary" rel="noreferrer">
-              View on GitHub
-            </a>
-          )}
         </div>
+        {REPO_PUBLIC && (
+          <p className="muted mt-4 text-sm">
+            or{' '}
+            <a
+              href={REPO_URL}
+              className="underline"
+              rel="noreferrer"
+              data-track="cta_click"
+              data-track-where="hero-github"
+            >
+              read the source on GitHub
+            </a>
+          </p>
+        )}
 
-        <div className="card mx-auto mt-10 max-w-3xl p-5 text-left">
-          <p className="muted mb-3 text-sm">Install in one line, on any operating system:</p>
+        <div id="install" className="card mx-auto mt-10 max-w-3xl scroll-mt-24 p-5 text-left">
+          <p className="muted mb-3 text-sm">
+            Install in one line on macOS, Linux or Windows. Only Node 22 is required.
+          </p>
           <InstallTabs compact />
         </div>
       </section>
 
-      <section className="mx-auto max-w-6xl px-4 py-12" aria-labelledby="why">
-        <h2 id="why" className="text-2xl font-bold">
-          Why SDODS
+      <section className="mx-auto max-w-6xl px-4 py-12" aria-labelledby="see">
+        <h2 id="see" className="text-2xl font-bold">
+          What a run leaves behind
         </h2>
         <p className="muted mt-2 max-w-3xl">
-          Software ships when someone is confident enough to say yes. That confidence is usually
-          scattered across a green pipeline, a manual check and a screenshot in a ticket. SDODS
-          turns it into evidence anyone can point at: every scenario tied to a business capability,
-          every run reproducible from one command, every regression explained by the screenshots and
-          requests that produced it.
+          Confidence to ship is usually scattered across a green pipeline, a manual check and a
+          screenshot in a ticket. SDODS turns it into evidence anyone can point at: every scenario
+          tied to a business capability, every run reproducible from one command, every regression
+          explained by the screenshots and requests that produced it. These are real captures from
+          the demo project.
         </p>
+        <div className="mt-8 grid gap-4 md:grid-cols-2">
+          <figure className="card overflow-hidden">
+            <img
+              src="/screenshots/step-02-before.webp"
+              width={960}
+              height={540}
+              alt="SauceDemo login form filled in, before the login button is clicked"
+              loading="lazy"
+              decoding="async"
+            />
+            <figcaption className="muted p-3 text-sm">
+              Before: login form, credentials filled
+            </figcaption>
+          </figure>
+          <figure className="card overflow-hidden">
+            <img
+              src="/screenshots/step-02-after.webp"
+              width={960}
+              height={540}
+              alt="SauceDemo inventory page after the login step"
+              loading="lazy"
+              decoding="async"
+            />
+            <figcaption className="muted p-3 text-sm">After: inventory page, logged in</figcaption>
+          </figure>
+        </div>
+        <figure className="card mt-4 overflow-hidden">
+          <img
+            src="/screenshots/ui/scenario-steps.webp"
+            width={1440}
+            height={900}
+            alt="SDODS run viewer showing the step timeline with a before/after comparison"
+            loading="lazy"
+            decoding="async"
+          />
+          <figcaption className="muted p-3 text-sm">
+            Run viewer: step timeline with a slider, overlay and pixel diff, beside the API panels
+          </figcaption>
+        </figure>
+      </section>
+
+      <section className="mx-auto max-w-6xl px-4 py-12" aria-labelledby="features">
+        <h2 id="features" className="text-2xl font-bold">
+          What ships in the box
+        </h2>
         <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {WHY.map(([title, body]) => (
+          {FEATURES.map(([title, body]) => (
             <article key={title} className="card p-5">
               <h3 className="font-semibold">{title}</h3>
               <p className="muted mt-2 text-sm">{body}</p>
@@ -167,74 +215,21 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-6xl px-4 py-12" aria-labelledby="see">
-        <h2 id="see" className="text-2xl font-bold">
-          See every step
-        </h2>
-        <p className="muted mt-2 max-w-3xl">
-          Regression scenarios capture a screenshot before and after every UI step. The run viewer
-          pairs them with a slider, an overlay and a pixel diff. These are real captures from the
-          demo project.
-        </p>
-        <div className="mt-8 grid gap-4 md:grid-cols-2">
-          <figure className="card overflow-hidden">
-            <img
-              src="/screenshots/step-02-before.png"
-              alt="SauceDemo login form filled in, before the login button is clicked"
-              loading="lazy"
-            />
-            <figcaption className="muted p-3 text-sm">
-              Before: login form, credentials filled
-            </figcaption>
-          </figure>
-          <figure className="card overflow-hidden">
-            <img
-              src="/screenshots/step-02-after.png"
-              alt="SauceDemo inventory page after the login step"
-              loading="lazy"
-            />
-            <figcaption className="muted p-3 text-sm">After: inventory page, logged in</figcaption>
-          </figure>
-        </div>
-        <figure className="card mt-4 overflow-hidden">
-          <img
-            src="/screenshots/ui/scenario-steps.png"
-            alt="SDODS run viewer showing the step timeline with a before/after comparison"
-            loading="lazy"
-          />
-          <figcaption className="muted p-3 text-sm">
-            Run viewer: step timeline with before/after comparison and API panels
-          </figcaption>
-        </figure>
-      </section>
-
-      <section className="mx-auto max-w-6xl px-4 py-12" aria-labelledby="features">
-        <h2 id="features" className="text-2xl font-bold">
-          What ships in the box
-        </h2>
-        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {FEATURES.map(([title, body]) => (
-            <article key={title} className="card p-5">
-              <h3 className="font-semibold">{title}</h3>
-              <p className="muted mt-2 text-sm">{body}</p>
-            </article>
-          ))}
-        </div>
-      </section>
-
       <section className="mx-auto max-w-6xl px-4 py-12" aria-labelledby="quickstart">
         <h2 id="quickstart" className="text-2xl font-bold">
-          Quickstart
+          Your first run
         </h2>
+        <p className="muted mt-2 max-w-3xl">
+          <code>sdods init</code> scaffolds a workspace with a demo project, so the first run needs
+          nothing of yours.
+        </p>
         <pre tabIndex={0} role="region" aria-label="Quickstart commands" className="mt-6">
-          <code>{`curl -fsSL https://sdods.com/install.sh | sh   # or on Windows: irm .../install.ps1 | iex
-
-cd ~/.sdods/app
+          <code>{`sdods init ~/my-tests && cd ~/my-tests
 sdods run -p demo-shop -e staging -l api
 sdods run -p demo-shop -e staging -l ui -b chromium -t @smoke`}</code>
         </pre>
         <p className="muted mt-3 text-sm">
-          Only Node 22 is required. Options, upgrade and uninstall are on the{' '}
+          Options, upgrade and uninstall are on the{' '}
           <Link href="/install/" className="underline">
             install page
           </Link>{' '}
@@ -285,8 +280,8 @@ sdods run -p demo-shop -e staging -l ui -b chromium -t @smoke`}</code>
           </h2>
           <p className="muted mt-1 text-sm">
             {REPO_PUBLIC
-              ? 'Feature requests and feedback go straight to the maintainers as GitHub issues and discussions. No account with us, no tracking.'
-              : 'Feature requests and feedback go straight to the maintainers by email. No account with us, no tracking.'}
+              ? 'Feature requests and feedback go straight to the maintainers as GitHub issues and discussions. No account with us needed.'
+              : 'Feature requests and feedback go straight to the maintainers by email. No account with us needed.'}
           </p>
           <Link href="/feedback/" className="btn btn-primary mt-4">
             Send feedback

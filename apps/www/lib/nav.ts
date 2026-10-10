@@ -1,5 +1,4 @@
 import { DOCS_URL, REPO_PUBLIC, REPO_URL } from './links';
-import { DESKTOP_PUBLIC } from './desktop-release';
 import { SPONSOR_PAGE, SPONSOR_PUBLIC } from './sponsor';
 
 export interface NavLink {
@@ -14,8 +13,8 @@ export interface NavLink {
  * disclosure below that, and neither copy can drift from the other.
  */
 export const NAV_LINKS: NavLink[] = [
-  // Shown once any platform is offered -- see DESKTOP_PLATFORMS in ./desktop-release.
-  ...(DESKTOP_PUBLIC ? [{ label: 'Download', href: '/download/' } as NavLink] : []),
+  // No "Download" entry: the header's primary button already is that link whenever a desktop
+  // release is offered (see SiteHeader), and the same word twice in one bar reads as two places.
   { label: 'Install', href: '/install/' },
   { label: 'Docs', href: DOCS_URL, external: true },
   { label: 'Roadmap', href: '/roadmap/' },

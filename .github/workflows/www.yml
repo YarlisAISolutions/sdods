@@ -77,6 +77,9 @@ jobs:
           # The community service (packages/community): the live questions, posting, votes and
           # feedback all go through it. Unset, the Q&A shows only the static archive.
           NEXT_PUBLIC_COMMUNITY_URL: ${{ vars.COMMUNITY_URL }}
+          # Cookieless page counts (apps/www/lib/analytics.ts). A PostHog project key is public by
+          # design, so a repository variable; unset, the site sends nothing and /privacy says so.
+          NEXT_PUBLIC_POSTHOG_KEY: ${{ vars.POSTHOG_KEY }}
           # sdods.com's sign-in (Firebase Auth), swapped in for @sdods/site-kit/identity-impl.
           # Unset, the site builds with no sign-in, as a fork does.
           SDODS_IDENTITY_MODULE: ./lib/firebase-identity.ts
