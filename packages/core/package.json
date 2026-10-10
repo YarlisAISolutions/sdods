@@ -26,6 +26,7 @@
     "./auth": "./src/auth/index.ts",
     "./insights": "./src/insights/index.ts",
     "./reporters/dashboard": "./src/reporters/dashboard.ts",
+    "./reporters/terminal": "./src/reporters/terminal.ts",
     "./reporters": "./src/reporters/index.ts",
     "./logger": "./src/logger.ts",
     "./auth/capture": "./src/auth/capture.ts"
@@ -51,6 +52,7 @@
       "./auth": "./dist/auth/index.js",
       "./insights": "./dist/insights/index.js",
       "./reporters/dashboard": "./dist/reporters/dashboard.js",
+      "./reporters/terminal": "./dist/reporters/terminal.js",
       "./reporters": "./dist/reporters/index.js",
       "./logger": "./dist/logger.js",
       "./auth/capture": "./dist/auth/capture.js"

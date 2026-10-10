@@ -41,6 +41,7 @@ import {
 import { analyzeChangeImpact } from '@sdods/mcp';
 import { createContext } from '../context.js';
 import { toolCommand, workspaceBin } from '../workspace-bin.js';
+import { openInBrowser, resolveOpenWhen } from '../open.js';
 import { browserStatuses, ensureBrowsers } from './browsers.js';
 import { gateFailedError, printGates } from '../gates.js';
 import { maybeNotify, notifyRun, type AutoNotifyOutcome } from '../notify.js';
@@ -90,6 +91,7 @@ export interface RunFlags {
   notify?: boolean;
   allowPoolContention?: boolean;
   installBrowsers?: boolean;
+  open?: string;
 }
 
 const RECORDING_MODES = RecordingModeSchema.options.join(' | ');
@@ -167,6 +169,10 @@ function addRunOptions(cmd: Command): Command {
     .option('--ui', 'interactive UI mode')
     .option('--debug', 'step debugger')
     .option('--list', 'list the run targets and tests that would run')
+    .option(
+      '--open <when>',
+      'open the SDODS dashboard after the run: always | on-failure | never (default: on-failure at an interactive terminal, never in CI or under an agent; or set SDODS_OPEN)',
+    )
     .option('--repeat-each <n>', 'repeat each test n times', parseIntFlag('repeat-each'))
     .option('--fail-on-flaky', 'exit 1 when any test is flaky')
     .option('--max-failures <n>', 'stop after n failures', parseIntFlag('max-failures'))
@@ -568,7 +574,8 @@ export async function runCommand(flags: RunFlags, cmd: Command): Promise<number>
     const [listFile, ...listArgv] = toolCommand(ctx.rootDir, args);
     const listed = await execa(listFile, listArgv, {
       cwd: ctx.rootDir,
-      env: childEnv,
+      // The SDODS terminal reporter lists scenarios by feature and title instead of reporting.
+      env: { ...childEnv, SDODS_LIST_ONLY: '1' },
       stdio: 'inherit',
       reject: false,
     });
@@ -755,6 +762,13 @@ export async function runCommand(flags: RunFlags, cmd: Command): Promise<number>
     out(pc.dim(`dashboard:   ${join(runDir, runFiles.dashboard, 'index.html')}`));
     out('');
     out(`  open the results:  ${pc.cyan(`sdods report --run ${runId} --open`)}`);
+    const openWhen = resolveOpenWhen(flags.open, false);
+    const failed = finalExit !== 0 && finalExit !== 130;
+    const dashboard = join(runDir, runFiles.dashboard, 'index.html');
+    if ((openWhen === 'always' || (openWhen === 'on-failure' && failed)) && existsSync(dashboard)) {
+      out(pc.dim(`  opening the dashboard in your browser (--open never to stop this)`));
+      await openInBrowser(dashboard);
+    }
     if (finalExit !== 0 && finalExit !== 130)
       out(`  step through it:   ${pc.cyan(`sdods trace --run ${runId}`)}`);
   }

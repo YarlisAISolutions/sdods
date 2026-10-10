@@ -35,6 +35,7 @@ import { createContext } from '../context.js';
 import { gateFailedError, printGates } from '../gates.js';
 import { json, ok, out, table, warn } from '../ui.js';
 import { toolCommand } from '../workspace-bin.js';
+import { openInBrowser } from '../open.js';
 
 function artifactsRoot(rootDir: string): string {
   return resolve(rootDir, process.env.SDODS_ARTIFACTS_DIR ?? '.sdods/runs');
@@ -64,11 +65,7 @@ function readJsonFile<T = unknown>(file: string): T | null {
   }
 }
 
-async function openPath(p: string) {
-  const cmd =
-    process.platform === 'darwin' ? 'open' : process.platform === 'win32' ? 'start' : 'xdg-open';
-  await execa(cmd, [p], { shell: process.platform === 'win32' }).catch(() => undefined);
-}
+const openPath = openInBrowser;
 
 /**
  * The process `report merge` judges: `--process` (with `-p`, or the project in a run.json), or the

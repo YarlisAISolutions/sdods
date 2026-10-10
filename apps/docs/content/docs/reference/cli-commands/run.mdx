@@ -11,7 +11,7 @@ sdods run [-p <slug>] [-e <env>] [-t <expr>] [-l <layer>]... [-b <browser>]... [
             [--trace <mode>] [--video <mode>]
             [--grep <pattern>] [--feature <path>] [--scenario <name>] [--run-id <id>] [--artifacts-dir <dir>]
             [--no-lint] [--ingest | --no-ingest] [--no-notify] [--allure] [--har-update | --har-replay] [--strict]
-            [--update-snapshots] [--ui] [--debug] [--list] [--repeat-each <n>] [--fail-on-flaky]
+            [--update-snapshots] [--ui] [--debug] [--list] [--open <when>] [--repeat-each <n>] [--fail-on-flaky]
             [--max-failures <n>] [--timeout <ms>] [--reporter <name[=file]>]... [--reporter-mode <mode>] [--trigger <kind>]
 ```
 
@@ -49,6 +49,7 @@ sdods run [-p <slug>] [-e <env>] [-t <expr>] [-l <layer>]... [-b <browser>]... [
 | `--update-snapshots`       | overwrite `@visual` baselines without review and print a warning; prefer [`sdods baselines`](/docs/reference/cli-commands/baselines)                                                                                                                                          |
 | `--ui`, `--debug`          | interactive UI mode, step debugger                                                                                                                                                                                                                                            |
 | `--list`                   | print the run targets and tests that would run, then stop                                                                                                                                                                                                                     |
+| `--open <when>`            | open the SDODS dashboard after the run: `always`, `on-failure` or `never`. Default `on-failure` at an interactive terminal, `never` in CI, under a coding agent, with `--json` or when output is piped; `SDODS_OPEN` sets it too                                              |
 | `--repeat-each <n>`        | repeat each test n times                                                                                                                                                                                                                                                      |
 | `--fail-on-flaky`          | exit `1` when any test is flaky                                                                                                                                                                                                                                               |
 | `--max-failures <n>`       | stop after n failures                                                                                                                                                                                                                                                         |
@@ -65,6 +66,10 @@ flowchart LR
 ```
 
 When the project enables an integration (`integrations.github`, `integrations.jira` or a custom provider), the run ends by publishing itself exactly as `sdods integrations notify --run-id <id>` does: check runs, the PR comment, and issues per `createIssueOnFailure`. A notify failure is printed as a warning and never changes the exit code; `--json` output carries the outcome under `notify`. Cancelled runs, runs with no scenario results and sharded runs (`--shard`) do not notify — notify once after merging shards. Pass `--no-notify` when a later CI step runs `sdods integrations notify` itself.
+
+### Console output
+
+Each scenario prints one line: `[n/total]`, its status, `Feature › Scenario` and its target, such as `[ui · chromium]`. Failures follow with the feature file, the error, the failure screenshot and video, and an `sdods trace <zip>` command. The run ends with the command that opens the results (`sdods report --run <id> --open`). The console shows `sdods` commands only; the HTML report and trace viewer it links to are Playwright's own, since SDODS runs on Playwright.
 
 Generated specs go to `.features-gen/<runId>/<slug>/<layer>/` and are removed after the run, so concurrent runs never race. When a tag expression matches no scenario the run exits `0` with a warning.
 
