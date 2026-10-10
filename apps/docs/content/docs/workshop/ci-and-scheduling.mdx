@@ -126,7 +126,7 @@ rwa-bank:
   name: rwa-bank · chromium · @regression
   if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
   container:
-    image: mcr.microsoft.com/playwright:v1.63.0-noble
+    image: mcr.microsoft.com/playwright:v1.64.0-noble
   steps:
     - uses: actions/checkout@v7
     - run: npm install -g bun@1.4.3 && bun install --frozen-lockfile
