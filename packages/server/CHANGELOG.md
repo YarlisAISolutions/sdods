@@ -1,5 +1,16 @@
 # @sdods/server
 
+## 0.13.1
+
+### Patch Changes
+
+- Updated dependencies [556ad26]
+- Updated dependencies [f85227d]
+  - @sdods/mcp@0.13.1
+  - @sdods/core@0.13.1
+  - @sdods/contracts@0.13.1
+  - @sdods/db@0.13.1
+
 ## 0.13.0
 
 ### Patch Changes
