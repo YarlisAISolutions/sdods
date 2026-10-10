@@ -107,8 +107,11 @@ describe('sdods run with setup: { tags } (Playwright project dependencies)', () 
     // dependency failed as "did not run": it has no result, so the SDODS totals hold the probe only.
     expect(totals, explain(r)).toMatchObject({ passed: 0, failed: 1 });
     expect(r.stdout, explain(r)).toMatch(/1 did not run/);
-    expect(r.stdout).toMatch(/\[gate--api--setup\].*gate probe/);
-    expect(r.stdout).not.toMatch(/✓.*\[gate--api\].*real work/);
+    // The terminal reporter names the target by layer and phase rather than the runner project.
+    // eslint-disable-next-line no-control-regex
+    const plain = r.stdout.replace(/\x1b\[[0-9;]*m/g, '');
+    expect(plain).toMatch(/gate probe \[api · setup\]/);
+    expect(plain).not.toMatch(/✔.*real work/);
   }, 180_000);
 
   it('keeps the gate when --scenario narrows the run to other scenarios', async () => {

@@ -63,8 +63,9 @@ export function StepTimeline({
             href={`/trace/index.html?trace=${encodeURIComponent(attempt.trace.url)}`}
             target="_blank"
             rel="noreferrer"
+            title="Playwright's trace viewer, served by SDODS"
           >
-            Open trace viewer
+            Open trace viewer (Playwright)
           </a>
         )}
         {attempt.video && (

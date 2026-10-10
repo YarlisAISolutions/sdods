@@ -58,7 +58,9 @@ describe('sdods CLI (end to end against projects/demo-shop)', () => {
     expect(r.exitCode).toBe(0);
     expect(r.stdout).toContain('demo-shop--api');
     expect(r.stdout).not.toContain('demo-shop--ui');
-    expect(r.stdout).toContain('posts.feature.spec.js');
+    // Scenarios by feature and title, not generated spec paths.
+    expect(r.stdout).toContain('Posts API › List posts');
+    expect(r.stdout).not.toContain('.spec.js');
   });
 
   it('run -l api --json produces a summary and run artifacts', async () => {

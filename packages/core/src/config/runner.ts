@@ -89,6 +89,8 @@ function browserUse(browser: BrowserName, projectChannel?: string): Record<strin
 }
 
 export const DASHBOARD_REPORTER = '@sdods/core/reporters/dashboard';
+/** The console output of a run: scenario names and `sdods` follow-ups, not spec paths. */
+export const TERMINAL_REPORTER = '@sdods/core/reporters/terminal';
 
 /** Convenience for `sdods.runner.config.ts`: read the selection from SDODS_* env vars. */
 export function selectionFromEnv(env: NodeJS.ProcessEnv = process.env): RunnerSelection {
@@ -363,9 +365,13 @@ export function buildRunnerConfig(
     return [name];
   });
   {
-    reporter.push(
-      reporterMode === 'server' ? ['line'] : reporterMode === 'quiet' ? ['dot'] : ['list'],
-    );
+    reporter.push([
+      TERMINAL_REPORTER,
+      {
+        mode: reporterMode === 'server' ? 'line' : reporterMode === 'quiet' ? 'dot' : 'list',
+        rootDir: first?.runtime.repoRoot ?? process.cwd(),
+      },
+    ]);
     reporter.push(['html', { outputFolder: join(runDir, runFiles.htmlReport), open: 'never' }]);
     // The cucumber reporter throws when no defineBddConfig() ran (recorded-only selections).
     if (bddConfigs > 0)
