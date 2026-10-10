@@ -66,7 +66,8 @@ describe.skipIf(!enabled)('stopping a real run', () => {
     });
     const pattern = `${job.runId}|headless_shell|chrome-headless-shell`;
 
-    await until(() => job.log.since(0).some((l) => /Running \d+ tests?/.test(l.line)), 120_000);
+    // The SDODS terminal reporter's first line once the runner has started its workers.
+    await until(() => job.log.since(0).some((l) => /Running \d+ scenarios?/.test(l.line)), 120_000);
     await until(() => leftovers(pattern).length > 1, 20_000);
     expect(job.status).toBe('running');
     expect(leftovers(pattern).length).toBeGreaterThan(1);
