@@ -1,4 +1,4 @@
-import parseInfix from 'cucumber-tag-expressions';
+import parseInfix from '@cucumber/tag-expressions';
 import { BrowserSchema, type ProjectConfig } from '@sdods/contracts';
 import { SdodsError } from '../errors.js';
 

@@ -27,17 +27,21 @@ export interface BrowserToolSpec {
  * start a test.
  *
  * Two deliberate divergences from upstream's own annotations:
- *  - `browser_take_screenshot` and `browser_pdf_save` write files, and upstream still marks them
- *    read-only. They stay `read` here because they only write into the session's own output
- *    directory (`confineOutputFile` in policy.ts refuses anything else), but the note says so
- *    rather than leaving it implied.
+ *  - `browser_take_screenshot`, `browser_pdf_save` and `browser_find` (given a `filename`) write
+ *    files, and upstream still marks them read-only. They stay `read` here because they only write
+ *    into the session's own output directory (`confineOutputFile` in policy.ts refuses anything
+ *    else), but the note says so rather than leaving it implied.
  *  - Everything that changes page state is `write`, including `browser_navigate`, which upstream
  *    does not flag. Navigating away is not an observation.
  */
 export const BROWSER_TOOLS: Record<UpstreamToolName, BrowserToolSpec> = {
   // ---- observe -----------------------------------------------------------------------------
   browser_snapshot: { pack: 'default', access: 'read' },
-  browser_find: { pack: 'default', access: 'read' },
+  browser_find: {
+    pack: 'default',
+    access: 'read',
+    note: 'A `filename` writes the matches into the session output directory only.',
+  },
   browser_console_messages: { pack: 'default', access: 'read' },
   browser_network_requests: { pack: 'default', access: 'read' },
   browser_network_request: {
@@ -69,6 +73,7 @@ export const BROWSER_TOOLS: Record<UpstreamToolName, BrowserToolSpec> = {
     note: 'Paths resolve inside the repository root the server was started in.',
   },
   browser_resize: { pack: 'default', access: 'write' },
+  browser_emulate_media: { pack: 'default', access: 'write' },
   browser_tabs: { pack: 'default', access: 'write' },
   browser_handle_dialog: { pack: 'default', access: 'write' },
   browser_close: {
