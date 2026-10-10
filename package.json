@@ -8,7 +8,7 @@
   "engines": {
     "node": ">=22"
   },
-  "packageManager": "bun@1.4.2",
+  "packageManager": "bun@1.4.3",
   "workspaces": [
     "packages/*",
     "apps/*"
@@ -64,7 +64,7 @@
   "devDependencies": {
     "@changesets/cli": "^3.0.3",
     "@eslint/js": "^10.0.1",
-    "@playwright/test": "^1.63.0",
+    "@playwright/test": "^1.64.0",
     "@sdods/cli": "workspace:*",
     "@sdods/contracts": "workspace:*",
     "@sdods/core": "workspace:*",
@@ -77,7 +77,7 @@
     "eslint-plugin-playwright": "^2.12.1",
     "execa": "^10.1.0",
     "playwright-bdd": "^9.2.1",
-    "prettier": "^3.9.9",
+    "prettier": "^3.9.10",
     "tsx": "^4.23.15",
     "typescript": "~6.0.3",
     "typescript-eslint": "^8.71.1",

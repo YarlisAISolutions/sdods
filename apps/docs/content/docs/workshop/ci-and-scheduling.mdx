@@ -129,7 +129,7 @@ rwa-bank:
     image: mcr.microsoft.com/playwright:v1.63.0-noble
   steps:
     - uses: actions/checkout@v7
-    - run: npm install -g bun@1.4.2 && bun install --frozen-lockfile
+    - run: npm install -g bun@1.4.3 && bun install --frozen-lockfile
     - uses: ./.github/actions/start-rwa
     - run: bun run sdods run -p rwa-bank -e ci -l api
     - run: bun run sdods run -p rwa-bank -e ci -l ui -b chromium -t @smoke

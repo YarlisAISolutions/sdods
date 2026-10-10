@@ -8,7 +8,7 @@ name: dependencies
 #                build; the answer lives in one rolling issue. Offset from the upgrade so the month
 #                has a mid-point check rather than two reports on the same morning.
 #
-# Held back on purpose, so the freshness report will keep listing them (checked 2026-09-15):
+# Held back on purpose, so the freshness report will keep listing them (checked 2026-10-10):
 #   typescript 6.0 not 7       typescript-eslint supports <6.1; TS 7 is the native compiler.
 #   @types/node 22             it matches engines.node >=22, so types cannot promise newer APIs.
 #   cucumber-expressions 19.0.0  the exact version playwright-bdd pins; lint reuses its classes.
@@ -35,7 +35,7 @@ permissions:
   issues: write
 
 env:
-  BUN_VERSION: '1.4.2'
+  BUN_VERSION: '1.4.3'
 
 jobs:
   freshness:

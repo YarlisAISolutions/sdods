@@ -44,7 +44,7 @@ const FEATURES: Array<[string, string]> = [
   ],
   [
     'MCP server and agents',
-    '85 tools for Claude Code, Codex, Cursor, VS Code, Gemini CLI and any MCP client; a Claude Code plugin; planner, generator, healer, upgrader.',
+    '86 tools for Claude Code, Codex, Cursor, VS Code, Gemini CLI and any MCP client; a Claude Code plugin; planner, generator, healer, upgrader.',
   ],
   [
     'CI, GitHub and Jira',

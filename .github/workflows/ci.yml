@@ -21,7 +21,7 @@ concurrency:
 env:
   CI: true
   # NOTE: do not export SDODS_ENV globally — unit tests build fixture projects with their own envs.
-  BUN_VERSION: '1.4.2'
+  BUN_VERSION: '1.4.3'
   DEMO_ENV: staging
   RUN_ID: gh-${{ github.run_id }}
 
@@ -229,7 +229,7 @@ jobs:
     timeout-minutes: 45
     container:
       # Keep in lock-step with @playwright/test (tests/playwright-image.test.ts checks it).
-      image: mcr.microsoft.com/playwright:v1.63.0-noble
+      image: mcr.microsoft.com/playwright:v1.64.0-noble
       options: --ipc=host
     env:
       # Firefox refuses to start as root when HOME belongs to another user (the runner's).
@@ -283,7 +283,7 @@ jobs:
     timeout-minutes: 45
     container:
       # Keep in lock-step with @playwright/test (tests/playwright-image.test.ts checks it).
-      image: mcr.microsoft.com/playwright:v1.63.0-noble
+      image: mcr.microsoft.com/playwright:v1.64.0-noble
       options: --ipc=host
     env:
       HOME: /root
